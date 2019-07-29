@@ -59,7 +59,7 @@
 ``` 
 {
     "code": 1,
-    "msg": "发生未知错误,请联系管理员,错误日志为:HTTPConnectionPool(host='10.6.6.116', port=8080): Max retries exceeded with url: /service (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000002784767B0B8>: Failed to establish a new connection: [WinError 10060] 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。'))",
+    "msg": "发生未知错误,请联系管理员,错误日志为:HTTPConnectionPool(host='1.1.1.1', port=8080): Max retries exceeded with url: /service (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000002784767B0B8>: Failed to establish a new connection: [WinError 10060] 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。'))",
     "请求类型": null,
     "data": null
 }
