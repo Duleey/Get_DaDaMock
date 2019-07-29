@@ -11,6 +11,7 @@ from get_mock_url import *
 import requests
 from readTxt import *
 from flask import Flask, Response, request
+from get_vpn import start_vpn,stop_vpn
 
 app = Flask(__name__)
 
@@ -67,6 +68,7 @@ def get_dada_mock():
             body_data = type6
             request_type = '模拟拒收'
 
+        print('-------------------------------------------------------')
         print("请求url为:{0}".format(mock_url))
         print('-------------------------------------------------------')
         print("请求data为:{0}".format(body_data))
@@ -74,6 +76,9 @@ def get_dada_mock():
         print("请求头为:{0}".format(headers))
 
         code = None
+
+        # 连接VPN
+        start_vpn()
 
         try:
             r = requests.post(url=mock_url, data=body_data, headers=headers, timeout=3)
@@ -111,6 +116,8 @@ def get_dada_mock():
                 except Exception as f:
                     msg = '发生未知错误,请联系管理员,错误日志为:{0}'.format(f)
 
+        # 关闭VPN
+        stop_vpn()
 
         # if mock_type == '1':
         #

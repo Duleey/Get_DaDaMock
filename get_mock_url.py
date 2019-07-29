@@ -14,10 +14,10 @@ class GetMockUrl:
 
     def __init__(self):
         chrome_driver = r"D:\work\TestCode\Git_DaDaMock\driver\chromedriver.exe"
-        url = 'xxx'
-        self.userName = 'xxx'
-        self.passWord = 'xxx'
-        self.mockServiceName = 'xxx'
+        url = 'https://www.baidu.com/'
+        self.userName = 'XXX'
+        self.passWord = 'XXX'
+        self.mockServiceName = 'XXX'
 
         chrome_options = Options()
         # 设置chrome浏览器无界面模式
@@ -25,8 +25,12 @@ class GetMockUrl:
 
         self.d = webdriver.Chrome(executable_path=chrome_driver, chrome_options=chrome_options)
         self.d.maximize_window()
+        print('-------------------------------------------------------')
+        print('成功打开谷歌浏览器')
         self.d.get(url)
         self.d.implicitly_wait(30)
+        print('-------------------------------------------------------')
+        print('成功打开网址')
 
 
 
@@ -35,7 +39,11 @@ class GetMockUrl:
         self.d.find_element_by_xpath("//input[@placeholder='请输入密码']").send_keys(self.passWord)
         self.d.find_element_by_xpath("//button[@class='ivu-btn ivu-btn-primary ivu-btn-long']").click()
         self.d.implicitly_wait(30)
+        print('-------------------------------------------------------')
+        print('登录成功')
         self.d.find_element_by_id('searchContent').send_keys(self.mockServiceName)
+        print('-------------------------------------------------------')
+        print('正在查询对应服务')
         self.d.find_element_by_id('searchContent').send_keys(Keys.ENTER)
         u = self.d.find_element_by_xpath("//*[@id='table_o']/tbody/tr[2]/td[2]/a").text
         # 截取冒号之前的ip段，并转换成str类型
