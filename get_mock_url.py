@@ -9,15 +9,28 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
+from readTxt import OperationIni
 
 class GetMockUrl:
 
-    def __init__(self):
+    def __init__(self, env):
+
+        opera = OperationIni()
+
         chrome_driver = r"D:\work\TestCode\Git_DaDaMock\driver\chromedriver.exe"
-        url = 'https://www.baidu.com/'
-        self.userName = 'XXX'
-        self.passWord = 'XXX'
-        self.mockServiceName = 'XXX'
+        base_url = '111'
+        url = None
+        if env == "DEV":
+            url = base_url + opera.read_ini(env=env, data='url')
+        if env == "QA":
+            url = base_url + opera.read_ini(env=env, data='url')
+        if env == "PROD":
+            url = base_url + opera.read_ini(env=env, data='url')
+
+
+        self.userName = '111'
+        self.passWord = '111'
+        self.mockServiceName = '111'
 
         chrome_options = Options()
         # 设置chrome浏览器无界面模式
@@ -30,7 +43,7 @@ class GetMockUrl:
         self.d.get(url)
         self.d.implicitly_wait(30)
         print('-------------------------------------------------------')
-        print('成功打开网址')
+        print('成功打开网址:{0}'.format(url))
 
 
 

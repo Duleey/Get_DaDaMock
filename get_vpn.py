@@ -10,13 +10,13 @@ import os
 
 def start_vpn():
     print('-------------------------------------------------------')
-    print("正在启动VPN:连接KA网络")
-    print(os.system('rasdial "ka-dev" "账号" "密码"'))
-    print("VPN连接成功:KA网络")
+    print("正在启动VPN:连接11网络")
+    print(os.system('111'))
+    print("VPN连接成功:11网络")
 
 
 def stop_vpn():
     print('-------------------------------------------------------')
-    print("正在关闭VPN:关闭KA网络")
-    print(os.system('rasdial ka-dev /disconnect'))
-    print("VPN关闭成功:KA网络")
+    print("正在关闭VPN:关闭11网络")
+    print(os.system('111'))
+    print("VPN关闭成功:11网络")

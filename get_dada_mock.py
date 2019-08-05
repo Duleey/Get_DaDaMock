@@ -18,13 +18,27 @@ app = Flask(__name__)
 
 @app.route('/getDaDaMock', methods=['POST', 'GET'])
 def get_dada_mock():
-    url = read_txt()
-    result = None
 
+    result = None
+    opera = OperationIni()
 
     if request.method == "POST":
         mock_type = request.form.get('type')
         paramterInput = request.form.get('paramterInput')
+        env = request.form.get('env', None)
+
+        # 开始调用
+        print('-------------------------------------------------------')
+        print("开始调用mock接口,入参为:mock_type:{0},paramterInput:{1},env:{2}".format(mock_type, paramterInput, env))
+
+        if env == None:
+            env = "QA"
+            print('-------------------------------------------------------')
+            print("env参数为空,正在使用默认参数:{0}".format(env))
+
+        # 字符串转大写
+        env = env.upper()
+        url = opera.read_ini(env)
         mock_url = 'http://' + url + ':8080/service'
         msg = None
         headers = {'Content-Type':'application/x-www-form-urlencoded'}
@@ -96,9 +110,9 @@ def get_dada_mock():
                 print('-------------------------------------------------------')
                 print('IP已失效，重新获取IP')
                 print('-------------------------------------------------------')
-                url = GetMockUrl().get_mock_url()
+                url = GetMockUrl(env=env).get_mock_url()
                 print("获取的新IP为:{0}".format(url))
-                write_txt(url)
+                opera.write_ini(env, url)
                 print('-------------------------------------------------------')
                 # read_url = read_txt()
                 mock_url = 'http://' + url + ':8080/service'
