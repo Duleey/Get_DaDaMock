@@ -7,16 +7,19 @@
 # @Software: PyCharm
 
 import json
-from get_mock_url import *
+from common.get_mock_url import *
 import requests
-from readTxt import *
+from util.readTxt import *
 from flask import Flask, Response, request
-from get_vpn import start_vpn,stop_vpn
+from util.get_vpn import start_vpn,stop_vpn
+from flask import Blueprint
+from util.Logger import Logger
 
 app = Flask(__name__)
+getDaDaMock = Blueprint('getDaDaMock', __name__)
+log = Logger("debug")
 
-
-@app.route('/getDaDaMock', methods=['POST', 'GET'])
+@getDaDaMock.route('/getDaDaMock', methods=['POST', 'GET'])
 def get_dada_mock():
 
     result = None
@@ -29,11 +32,13 @@ def get_dada_mock():
 
         # 开始调用
         print('-------------------------------------------------------')
+        log.info("开始调用mock接口,入参为:mock_type:{0},paramterInput:{1},env:{2}".format(mock_type, paramterInput, env))
         print("开始调用mock接口,入参为:mock_type:{0},paramterInput:{1},env:{2}".format(mock_type, paramterInput, env))
 
         if env == None:
             env = "QA"
             print('-------------------------------------------------------')
+            log.info("env参数为空,正在使用默认参数:{0}".format(env))
             print("env参数为空,正在使用默认参数:{0}".format(env))
 
         # 字符串转大写
@@ -95,10 +100,12 @@ def get_dada_mock():
         start_vpn()
 
         try:
+            log.info("开始:调用订单mock服务接口，请求地址为：{0}，入参为：{1}，请求头为：{2}".format(mock_url, body_data, headers))
             r = requests.post(url=mock_url, data=body_data, headers=headers, timeout=3)
             code = r.status_code
             msg = '请求成功'
             result = r.json()
+            log.info("结束:调用订单mock服务接口，返回数据打印:{0}".format(result))
             print('-------------------------------------------------------')
             print("返回数据打印:{0}".format(result))
         except Exception as f:
@@ -109,26 +116,32 @@ def get_dada_mock():
             if status == False or code != 200:
                 print('-------------------------------------------------------')
                 print('IP已失效，重新获取IP')
+                log.warning('IP已失效，重新获取IP')
                 print('-------------------------------------------------------')
                 url = GetMockUrl(env=env).get_mock_url()
                 print("获取的新IP为:{0}".format(url))
-                opera.write_ini(env, url)
+                log.warning("获取的新IP为:{0}".format(url))
+                opera.write_ini(section=env, data=url)
                 print('-------------------------------------------------------')
                 # read_url = read_txt()
                 mock_url = 'http://' + url + ':8080/service'
                 print("请求url为:{0}".format(mock_url))
+                log.warning("请求url为:{0}，请求data为:{1}，请求头为:{2}".format(mock_url, body_data, headers))
                 print('-------------------------------------------------------')
                 print("请求data为:{0}".format(body_data))
                 print('-------------------------------------------------------')
                 print("请求头为:{0}".format(headers))
                 try:
+                    log.warning("开始:调用订单mock服务接口，请求地址为：{0}，入参为：{1}，请求头为：{2}".format(mock_url, body_data, headers))
                     r = requests.post(url=mock_url, data=body_data, headers=headers)
                     result = r.json()
                     print('-------------------------------------------------------')
                     print("返回数据打印:{0}".format(result))
+                    log.warning("结束:调用订单mock服务接口，返回数据打印:{0}".format(result))
                     msg = '请求成功'
                 except Exception as f:
                     msg = '发生未知错误,请联系管理员,错误日志为:{0}'.format(f)
+                    log.error('发生未知错误,请联系管理员,错误日志为:{0}'.format(f))
 
         # 关闭VPN
         stop_vpn()
@@ -410,5 +423,5 @@ def get_dada_mock():
 
 
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=6000, debug=True)
+# if __name__ == '__main__':
+#     app.run(host='0.0.0.0', port=6000, debug=True)
