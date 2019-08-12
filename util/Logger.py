@@ -13,7 +13,8 @@ import logging
 from util.singleton import Singleton
 
 
-@Singleton  # 如需打印不同路径的日志（运行日志、审计日志），则不能使用单例模式（注释或删除此行）。此外，还需设定参数name。
+# @Singleton  # 如需打印不同路径的日志（运行日志、审计日志），则不能使用单例模式（注释或删除此行）。此外，还需设定参数name。
+# name=os.path.split(os.path.splitext(sys.argv[0])[0])[-1]
 class Logger:
     def __init__(self, set_level="INFO",
                  name=os.path.split(os.path.splitext(sys.argv[0])[0])[-1],

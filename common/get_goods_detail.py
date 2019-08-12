@@ -64,12 +64,35 @@ class GetGoodsDetail:
             # print(res.json(), url, json_data)
             try:
                 skuId = res.json()['data']['goods']['skuList'][0]['skuId']
-                self.log.warning('结束：调用get_goods_detail方法，返回数据为:{0}，返回skuId为：{1}'.format(r.json(), skuId))
+                self.log.warning('结束：调用get_goods_detail方法，返回数据为:{0}，返回skuId为：{1}'.format(res.json(), skuId))
                 return res.json(), skuId
             except Exception as f:
                 # print(f)
                 self.log.error('调用获取商品详情接口失败，错误日志为：{0}'.format(f))
-                return {'msg': '底层接口请求失败，请检查所传字段的数据是否正确'}
+                # return {'msg': '底层接口请求失败，请检查所传字段的数据是否正确'}
+                return res.json()
+
+        elif r.json()['code']['errmsg'] == '根据Pid查询storeId失败,此商家不存在此门店':
+            # print(r.json()['code']['errmsg'])
+            # return r.json()['code']['errmsg']
+            # 获取最新的token并存入ini文件
+            self.log.warning('提示：根据Pid查询storeId失败,此商家不存在此门店，尝试开始获取新的accesstoken')
+            self.get_access_token.set_access_token()
+            # 注意：这里一定要重新获取一次ini文件中的access_token
+            new_access_token = self.get_access_token.get_ini_access_token()
+            url = self.url.format(self.path, new_access_token)
+            self.log.warning('开始：调用get_goods_detail方法，请求地址为：{0}，入参为：{1}'.format(url, json_data))
+            res = requests.post(url=url, json=json_data)
+            # print(res.json(), url, json_data)
+            try:
+                skuId = res.json()['data']['goods']['skuList'][0]['skuId']
+                self.log.warning('结束：调用get_goods_detail方法，返回数据为:{0}，返回skuId为：{1}'.format(res.json(), skuId))
+                return res.json(), skuId
+            except Exception as f:
+                # print(f)
+                self.log.error('调用获取商品详情接口失败，错误日志为：{0}'.format(f))
+                # return {'msg': '底层接口请求失败，请检查所传字段的数据是否正确'}
+                return res.json()
 
         else:
             try:
@@ -79,10 +102,11 @@ class GetGoodsDetail:
             except Exception as f:
                 # print(f)
                 self.log.error('调用获取商品详情接口失败1，错误日志为：{0}'.format(f))
-                return {'msg': '底层接口请求失败，请检查所传字段的数据是否正确'}
+                # return {'msg': '底层接口请求失败，请检查所传字段的数据是否正确'}
+                return r.json()
 
 
 
 
-# g = GetGoodsDetail()
-# print(g.get_goods_detail())
+# g = GetGoodsDetail(env='DEV')
+# print(g.get_goods_detail('125190117','971017'))

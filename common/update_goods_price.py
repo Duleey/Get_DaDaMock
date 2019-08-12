@@ -79,6 +79,7 @@ class updateGoodsPrice:
         except Exception as f:
             self.log.error('修改商品失败，错误日志为：{0}'.format(f))
             return {'msg': '底层接口请求失败，请检查所传字段的数据是否正确'}
+            # return r.json()
 
 
 # g = updateGoodsPrice()

@@ -1,34 +1,22 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# @Time    : 2019/8/8 11:27
-# @Author  : Weiqiang.long
-# @Site    : 
-# @File    : manage.py
-# @Software: PyCharm
-import json
+    
+**简要描述：** 
 
-from flask import Flask, request, Response
-from flask_cors import CORS
-from apis.get_dada_mock import getDaDaMock
-from apis.addGoods import AddGoods
-from apis.updateGoodsPrice import updatePrice
-from apis.updateGoodsStock import updateStock
-from apis.updateGoodsShelfStatus import updateShelfStatus
-from apis.getGoodsDetail import getGoodsDetail
+- 获取接口list接口
 
-app = Flask(__name__)
-# 注册蓝图，并指定其对应的前缀（url_prefix）
-app.register_blueprint(getDaDaMock, url_prefix="/api")
-app.register_blueprint(AddGoods, url_prefix="/api")
-app.register_blueprint(updatePrice, url_prefix="/api")
-app.register_blueprint(updateStock, url_prefix="/api")
-app.register_blueprint(updateShelfStatus, url_prefix="/api")
-app.register_blueprint(getGoodsDetail, url_prefix="/api")
+**请求URL：** 
+- ` http://xx.com/apis`
+  
+**请求方式：**
+- GET 
 
-@app.route('/apis', methods=['GET'])
-def get_apis():
-    if request.method == "GET":
-        res = {
+**参数：** 
+
+无
+
+ **返回示例**
+
+``` 
+  {
     "code": 1,
     "msg": "请求成功",
     "请求场景": "接口列表",
@@ -96,11 +84,9 @@ def get_apis():
         }
     ]
 }
-        return Response(json.dumps(res), mimetype='application/json')
+```
+
+ **备注** 
 
 
 
-
-if __name__ == '__main__':
-    CORS(app, supports_credentials=True)
-    app.run(host='0.0.0.0', port=8089, debug=True)

@@ -1,0 +1,209 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# @Time    : 2019/8/12 12:17
+# @Author  : Weiqiang.long
+# @Site    : 
+# @File    : add_goods.py
+# @Software: PyCharm
+
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# @Time    : 2019/8/8 13:39
+# @Author  : Weiqiang.long
+# @Site    :
+# @File    : get_goods_detail.py
+# @Software: PyCharm
+import time
+
+import requests
+from common.get_access_token import GetAccessToken
+from util.readTxt import OperationIni
+from util.Logger import Logger
+
+'''
+新增商品
+'''
+class addGoods:
+    def __init__(self, env='QA'):
+        self.log = Logger("debug")
+        opera = OperationIni(fileName='config.ini', pathName='config')
+        self.env = env
+        self.get_access_token = GetAccessToken(env=env)
+
+        # env字符串转小写
+        env = env.lower()
+        key = env + '_url'
+        self.url = opera.read_ini(section='goods', key=key)
+        self.path = opera.read_ini(section='goods', key='addgoods')
+
+        self.access_token = self.get_access_token.get_ini_access_token()
+
+
+    def add_goods(self, storeId=None, outerGoodsCode=None, deliveryTypeIdList=None, title=None, salePrice=None, originalPrice=None,
+                  adviseSalePriceMin=None, adviseSalePriceMax=None, goodsImageUrl=None):
+        """
+        新增商品
+        :param storeId: 门店id
+        :param outerGoodsCode: 外部spu编码
+        :param deliveryTypeIdList: 配送方式id列表（可从/goods/findDeliveryTypeList接口获取）
+        :param title: 商品标题
+        :param salePrice: 售价
+        :param originalPrice: 市场价
+        :param adviseSalePriceMin: 门店售价范围开始值
+        :param adviseSalePriceMax: 门店售价范围结束值
+        :param goodsImageUrl: 商品图片
+        :return:
+        """
+        url = self.url.format(self.path, self.access_token)
+        if storeId == None:
+            if self.env == "QA":
+                storeId = 1001
+            if self.env == "DEV":
+                storeId = 3017
+
+        if outerGoodsCode == None:
+            # 使用秒级时间戳自动拼接spu
+            t = int(time.time())
+            d = 'zd' + str(t)
+            outerGoodsCode = d
+
+        if deliveryTypeIdList == None:
+            if self.env == "QA":
+                deliveryTypeIdList = [2]
+            if self.env == "DEV":
+                deliveryTypeIdList = [209435]
+        if salePrice == None:
+            salePrice = 0.01
+        if originalPrice == None:
+            originalPrice = 1
+        if adviseSalePriceMin == None:
+            adviseSalePriceMin = 0.01
+        if adviseSalePriceMax == None:
+            adviseSalePriceMax = 1
+        if goodsImageUrl == None:
+            goodsImageUrl = "https://www.baidu.com/a016cb2de441406289433fd0c71c56bd.png"
+
+
+        json_data = {
+    "storeId": storeId,
+    "goods": {
+        "b2cGoods": {
+            "deliveryTypeIdList": deliveryTypeIdList,
+            "b2cGoodsType": 0
+        },
+        "categoryId": 274,
+        "title": title,
+        "isMultiSku": 0,
+        "outerGoodsCode": outerGoodsCode,
+        "goodsTagId": "",
+        "goodsDesc": "",
+        "goodsTemplateId": -1,
+        "isMemberShipDiscount": 0,
+        "deductStockType": 1,
+        "isCanSell": 1,
+        "isAutoCanSell": 0,
+        "isAutoForbidSell": 0,
+        "startSellTime": None,
+        "startForbidTime": None,
+        "categoryNameTree": "食品,零食/坚果/特产,其他休闲零食",
+        "skuList": [
+            {
+                "outerSkuCode": None,
+                "productType": 1,
+                "singleProductId": 116130117,
+                "combineProduct": {},
+                "salePrice": salePrice,
+                "adviseSalePriceMin": adviseSalePriceMin,
+                "adviseSalePriceMax": adviseSalePriceMax,
+                "originalPrice": originalPrice,
+                "b2cSku": {
+                    "weight": None,
+                    "volume": None
+                },
+                "isDisabled": False,
+                "editStockNum": 0
+            }
+        ],
+        "selectedGoodsAttrList": [],
+        "selectedSaleAttrList": [],
+        "goodsVideoUrl": None,
+        "goodsVideoImageUrl": None,
+        "limitBuyNum": 0,
+        "isPutAway": 0,
+        "saleChannelType": 3,
+        "selectedGoodsPropList": [],
+        "selectedInnerGoodsPropList": [],
+        "goodsImageUrl": [
+            goodsImageUrl
+        ],
+        "goodsBrandId": ""
+    }
+}
+
+
+        self.log.info('开始：调用add_goods方法，请求地址为：{0}，入参为：{1}'.format(url, json_data))
+        r = requests.post(url=url, json=json_data)
+        print(r.json())
+
+        # 如果access_token无效
+        if r.json()['data'] == 'invalid accesstoken':
+            # 获取最新的token并存入ini文件
+            self.log.warning('提示：ini文件中的accesstoken失效，开始获取新的accesstoken')
+            self.get_access_token.set_access_token()
+            # 注意：这里一定要重新获取一次ini文件中的access_token
+            new_access_token = self.get_access_token.get_ini_access_token()
+            self.log.warning('开始：调用add_goods方法，请求地址为：{0}，入参为：{1}'.format(url, json_data))
+            url = self.url.format(self.path, new_access_token)
+            res = requests.post(url=url, json=json_data)
+            # print(res.json(), url, json_data)
+            try:
+                goodsId = res.json()['data']['goodsId']
+                skuId = res.json()['data']['skuList'][0]['skuId']
+                self.log.warning('结束：调用add_goods方法，返回数据为:{0}，返回goodsId为：{1}，返回skuId为：{2}'.format(res.json(),goodsId,skuId))
+                return res.json(), goodsId, skuId
+            except Exception as f:
+                # print(f)
+                self.log.error('调用新增商品接口失败，错误日志为：{0}'.format(f))
+                # return {'msg': '底层接口请求失败，请检查所传字段的数据是否正确'}
+                return res.json()
+
+        elif r.json()['code']['errmsg'] == '根据Pid查询storeId失败,此商家不存在此门店':
+            # print(r.json()['code']['errmsg'])
+            # return r.json()['code']['errmsg']
+            # 获取最新的token并存入ini文件
+            self.log.warning('提示：根据Pid查询storeId失败,此商家不存在此门店，尝试开始获取新的accesstoken')
+            self.get_access_token.set_access_token()
+            # 注意：这里一定要重新获取一次ini文件中的access_token
+            new_access_token = self.get_access_token.get_ini_access_token()
+            url = self.url.format(self.path, new_access_token)
+            self.log.warning('开始：调用add_goods方法，请求地址为：{0}，入参为：{1}'.format(url, json_data))
+            res = requests.post(url=url, json=json_data)
+
+            # print(res.json(), url, json_data)
+            try:
+                goodsId = res.json()['data']['goodsId']
+                skuId = res.json()['data']['skuList'][0]['skuId']
+                self.log.warning('结束：调用add_goods方法，返回数据为:{0}，返回goodsId为：{1}，返回skuId为：{2}'.format(res.json(),goodsId,skuId))
+                return res.json(), goodsId, skuId
+            except Exception as f:
+                # print(f)
+                self.log.error('调用新增商品接口失败，错误日志为：{0}'.format(f))
+                return {'msg': '根据Pid查询storeId失败,此商家不存在此门店,请检查storeId是否正确'}
+
+        else:
+            try:
+                goodsId = r.json()['data']['goodsId']
+                skuId = r.json()['data']['skuList'][0]['skuId']
+                self.log.warning('结束：调用add_goods方法，返回数据为:{0}，返回goodsId为：{1}，返回skuId为：{2}'.format(r.json(), goodsId, skuId))
+                return r.json(), goodsId, skuId
+            except Exception as f:
+                # print(f)
+                self.log.error('调用新增商品接口失败1，错误日志为：{0}'.format(f))
+                # return {'msg': '底层接口请求失败，请检查所传字段的数据是否正确'}
+                return r.json()
+
+
+
+
+# g = AddGoods(env='DEV')
+# print(g.add_goods(title='自动增加商品'))
