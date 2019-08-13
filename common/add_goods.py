@@ -17,6 +17,7 @@ import time
 
 import requests
 from common.get_access_token import GetAccessToken
+from util.get_delivery_type import get_delivery_type
 from util.readTxt import OperationIni
 from util.Logger import Logger
 
@@ -39,13 +40,14 @@ class addGoods:
         self.access_token = self.get_access_token.get_ini_access_token()
 
 
-    def add_goods(self, storeId=None, outerGoodsCode=None, deliveryTypeIdList=None, title=None, salePrice=None, originalPrice=None,
+    def add_goods(self, pid, storeId=None, outerGoodsCode=None, deliveryTypeIdList=None, title=None, salePrice=None, originalPrice=None,
                   adviseSalePriceMin=None, adviseSalePriceMax=None, goodsImageUrl=None):
         """
         新增商品
+        :param pid: 商家id
         :param storeId: 门店id
         :param outerGoodsCode: 外部spu编码
-        :param deliveryTypeIdList: 配送方式id列表（可从/goods/findDeliveryTypeList接口获取）
+        :param deliveryTypeIdList: 配送类型列表，可传多个配送类型，用,隔开（1.同城限时达;2.全城配;3.包含1和2）
         :param title: 商品标题
         :param salePrice: 售价
         :param originalPrice: 市场价
@@ -55,6 +57,13 @@ class addGoods:
         :return:
         """
         url = self.url.format(self.path, self.access_token)
+
+        if pid == None:
+            if self.env == 'QA':
+                pid = 1
+            if self.env == 'DEV':
+                pid = 17
+
         if storeId == None:
             if self.env == "QA":
                 storeId = 1001
@@ -67,11 +76,25 @@ class addGoods:
             d = 'zd' + str(t)
             outerGoodsCode = d
 
-        if deliveryTypeIdList == None:
-            if self.env == "QA":
-                deliveryTypeIdList = [2]
-            if self.env == "DEV":
-                deliveryTypeIdList = [209435]
+        deliveryTypeId = None
+        if deliveryTypeIdList != None:
+            if deliveryTypeIdList == '3':
+                deliveryTypeId = get_delivery_type(env=self.env, pid=pid, storeId=storeId, deliveryType=int(deliveryTypeIdList))[1]
+                if deliveryTypeId == None:
+                    return {"status": 103, "message": "当前门店该配送方式不存在"}
+                elif len(deliveryTypeId) < 2:
+                    return {"status": 104, "message": "当前门店只有一种配送方式,请重新传递配送方式ID"}
+                else:
+                    deliveryTypeId = deliveryTypeId
+            else:
+
+                deliveryType = get_delivery_type(env=self.env, pid=pid, storeId=storeId, deliveryType=int(deliveryTypeIdList))[1]
+                if deliveryType == None:
+                    return {"status": 103, "message": "当前门店该配送方式不存在"}
+                else:
+                    deliveryTypeId=[]
+                    deliveryTypeId.append(deliveryType)
+
         if salePrice == None:
             salePrice = 0.01
         if originalPrice == None:
@@ -84,11 +107,13 @@ class addGoods:
             goodsImageUrl = "https://www.baidu.com/a016cb2de441406289433fd0c71c56bd.png"
 
 
+
+
         json_data = {
     "storeId": storeId,
     "goods": {
         "b2cGoods": {
-            "deliveryTypeIdList": deliveryTypeIdList,
+            "deliveryTypeIdList": deliveryTypeId,
             "b2cGoodsType": 0
         },
         "categoryId": 274,
