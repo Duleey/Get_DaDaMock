@@ -51,8 +51,8 @@ class GetAccessToken:
         '''
 
         self.log.info('开始：调用access_token接口，请求地址为：{0}'.format(self.url))
-
-        r = requests.post(url=self.url)
+        requests.packages.urllib3.disable_warnings()
+        r = requests.post(url=self.url, verify=False)
         access_token = r.json()['access_token']
         self.log.info('结束：调用access_token接口，获取的access_token为：{0}'.format(access_token))
         return access_token

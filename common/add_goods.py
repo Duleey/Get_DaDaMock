@@ -173,8 +173,9 @@ class addGoods:
 
 
         self.log.info('开始：调用add_goods方法，请求地址为：{0}，入参为：{1}'.format(url, json_data))
-        r = requests.post(url=url, json=json_data)
-        print(r.json())
+        requests.packages.urllib3.disable_warnings()
+        r = requests.post(url=url, json=json_data, verify=False)
+        # print(r.json())
 
         # 如果access_token无效
         if r.json()['data'] == 'invalid accesstoken':
@@ -185,7 +186,8 @@ class addGoods:
             new_access_token = self.get_access_token.get_ini_access_token()
             self.log.warning('开始：调用add_goods方法，请求地址为：{0}，入参为：{1}'.format(url, json_data))
             url = self.url.format(self.path, new_access_token)
-            res = requests.post(url=url, json=json_data)
+            requests.packages.urllib3.disable_warnings()
+            res = requests.post(url=url, json=json_data, verify=False)
             # print(res.json(), url, json_data)
             try:
                 goodsId = res.json()['data']['goodsId']
@@ -208,7 +210,8 @@ class addGoods:
             new_access_token = self.get_access_token.get_ini_access_token()
             url = self.url.format(self.path, new_access_token)
             self.log.warning('开始：调用add_goods方法，请求地址为：{0}，入参为：{1}'.format(url, json_data))
-            res = requests.post(url=url, json=json_data)
+            requests.packages.urllib3.disable_warnings()
+            res = requests.post(url=url, json=json_data, verify=False)
 
             # print(res.json(), url, json_data)
             try:

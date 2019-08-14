@@ -22,13 +22,14 @@ class GetMockUrl:
 
         chrome_driver = findPath.data_dir(fileName='chromedriver.exe', pathName='driver')
         base_url = opera.read_ini(section='CONFIG', key='base_url')
-        url = None
-        if env == "DEV":
-            url = base_url + opera.read_ini(section=env, key='url')
-        if env == "QA":
-            url = base_url + opera.read_ini(section=env, key='url')
-        if env == "PROD":
-            url = base_url + opera.read_ini(section=env, key='url')
+        # url = None
+        # if env == "DEV":
+        #     url = base_url + opera.read_ini(section=env, key='url')
+        # if env == "QA":
+        #     url = base_url + opera.read_ini(section=env, key='url')
+        # if env == "PROD":
+        #     url = base_url + opera.read_ini(section=env, key='url')
+        url = base_url + opera.read_ini(section=env, key='url')
 
 
         self.userName = opera.read_ini(section='CONFIG', key='userName')

@@ -50,7 +50,8 @@ class GetGoodsDetail:
             json_data = {'goodsId': goodsId, 'storeId': storeId}
 
         self.log.info('开始：调用get_goods_detail方法，请求地址为：{0}，入参为：{1}'.format(url, json_data))
-        r = requests.post(url=url, json=json_data)
+        requests.packages.urllib3.disable_warnings()
+        r = requests.post(url=url, json=json_data, verify=False)
         # 如果access_token无效
         if r.json()['data'] == 'invalid accesstoken':
             # 获取最新的token并存入ini文件
@@ -60,7 +61,8 @@ class GetGoodsDetail:
             new_access_token = self.get_access_token.get_ini_access_token()
             self.log.warning('开始：调用get_goods_detail方法，请求地址为：{0}，入参为：{1}'.format(url, json_data))
             url = self.url.format(self.path, new_access_token)
-            res = requests.post(url=url, json=json_data)
+            requests.packages.urllib3.disable_warnings()
+            res = requests.post(url=url, json=json_data, verify=False)
             # print(res.json(), url, json_data)
             try:
                 skuId = res.json()['data']['goods']['skuList'][0]['skuId']
@@ -82,7 +84,8 @@ class GetGoodsDetail:
             new_access_token = self.get_access_token.get_ini_access_token()
             url = self.url.format(self.path, new_access_token)
             self.log.warning('开始：调用get_goods_detail方法，请求地址为：{0}，入参为：{1}'.format(url, json_data))
-            res = requests.post(url=url, json=json_data)
+            requests.packages.urllib3.disable_warnings()
+            res = requests.post(url=url, json=json_data, verify=False)
             # print(res.json(), url, json_data)
             try:
                 skuId = res.json()['data']['goods']['skuList'][0]['skuId']
@@ -109,4 +112,4 @@ class GetGoodsDetail:
 
 
 # g = GetGoodsDetail(env='DEV')
-# print(g.get_goods_detail('125190117','971017'))
+# print(g.get_goods_detail('125950117','305017'))

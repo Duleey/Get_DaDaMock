@@ -52,7 +52,8 @@ class updateGoodsShelfStatus:
         }
 
         self.log.info('开始：调用update_goods_shelf_status方法，请求地址为：{0}，入参为：{1}'.format(url, json_data))
-        r = requests.post(url=url, json=json_data)
+        requests.packages.urllib3.disable_warnings()
+        r = requests.post(url=url, json=json_data, verify=False)
         # 如果access_token无效
         if r.json()['data'] == 'invalid accesstoken':
             # 获取最新的token并存入ini文件
@@ -62,7 +63,8 @@ class updateGoodsShelfStatus:
             new_access_token = self.get_access_token.get_ini_access_token()
             url = self.base_url.format(self.path, new_access_token)
             self.log.warning('开始：调用update_goods_shelf_status方法，请求地址为：{0}，入参为：{1}'.format(url, json_data))
-            res = requests.post(url=url, json=json_data)
+            requests.packages.urllib3.disable_warnings()
+            res = requests.post(url=url, json=json_data, verify=False)
             self.log.warning('结束：调用update_goods_shelf_status方法，返回数据为:{0}'.format(res.json()))
             return res.json()
         else:
