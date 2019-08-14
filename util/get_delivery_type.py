@@ -64,7 +64,8 @@ def get_delivery_type(pid=None, env='QA', storeId=None, deliveryType=1, goodsId=
 }
 
     log.info('开始：调用get_delivery_type方法，请求地址为：{0}，入参为：{1}'.format(url, json_data))
-    r = requests.post(url=url, json=json_data)
+    requests.packages.urllib3.disable_warnings()
+    r = requests.post(url=url, json=json_data, verify=False)
 
     # 如果access_token无效
     if r.json()['data'] == 'invalid accesstoken':
@@ -75,7 +76,8 @@ def get_delivery_type(pid=None, env='QA', storeId=None, deliveryType=1, goodsId=
         new_access_token = get_access_token.get_ini_access_token()
         url = base_url.format(path, new_access_token)
         log.warning('开始：调用get_delivery_type方法，请求地址为：{0}，入参为：{1}'.format(url, json_data))
-        res = requests.post(url=url, json=json_data)
+        requests.packages.urllib3.disable_warnings()
+        res = requests.post(url=url, json=json_data, verify=False)
         try:
             deliveryTypeId = delivery_type(result=res.json(), deliveryType=deliveryType)
             log.warning('结束：调用get_delivery_type方法，返回数据为:{0}，返回deliveryTypeId为：{1}'.format(res.json(), deliveryTypeId))
@@ -93,7 +95,8 @@ def get_delivery_type(pid=None, env='QA', storeId=None, deliveryType=1, goodsId=
         new_access_token = get_access_token.get_ini_access_token()
         url = base_url.format(path, new_access_token)
         log.warning('开始：调用get_delivery_type方法，请求地址为：{0}，入参为：{1}'.format(url, json_data))
-        res = requests.post(url=url, json=json_data)
+        requests.packages.urllib3.disable_warnings()
+        res = requests.post(url=url, json=json_data, verify=False)
         try:
             deliveryTypeId = delivery_type(result=res.json(), deliveryType=deliveryType)
             log.warning('结束：调用get_delivery_type方法，返回数据为:{0}，返回deliveryTypeId为：{1}'.format(res.json(), deliveryTypeId))
