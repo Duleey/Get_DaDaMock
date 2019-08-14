@@ -76,6 +76,12 @@ class addGoods:
             d = 'zd' + str(t)
             outerGoodsCode = d
 
+        if deliveryTypeIdList == None:
+            if self.env == "QA":
+                deliveryTypeIdList = [4]
+            if self.env == "DEV":
+                deliveryTypeIdList = [209435]
+
         deliveryTypeId = None
         if deliveryTypeIdList != None:
             if deliveryTypeIdList == '3':
