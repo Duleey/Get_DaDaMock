@@ -16,11 +16,11 @@ from util.Logger import Logger
 修改商品价格
 '''
 class updateGoodsPrice:
-    def __init__(self, env='QA'):
+    def __init__(self, pid, env='QA'):
         self.log = Logger("debug")
         self.opera = OperationIni(fileName='config.ini', pathName='config')
-        self.get_skuId = GetGoodsDetail(env=env)
-        self.get_access_token = GetAccessToken(env=env)
+        self.get_skuId = GetGoodsDetail(env=env, pid=pid)
+        self.get_access_token = GetAccessToken(env=env, pid=pid)
 
         # env字符串转小写
         env = env.lower()

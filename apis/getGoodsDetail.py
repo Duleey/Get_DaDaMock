@@ -19,6 +19,7 @@ def get_goods_detail():
 
     if request.method == "POST":
         env = request.form.get('env', None)
+        pid = request.form.get('pid', None)
         goodsId = request.form.get('goodsId', None)
         storeId = request.form.get('storeId', None)
 
@@ -37,7 +38,7 @@ def get_goods_detail():
         # 字符串转大写
         env = env.upper()
         # 初始化修改商品价格类
-        get_goods_detail = GetGoodsDetail(env=env)
+        get_goods_detail = GetGoodsDetail(env=env, pid=pid)
         # 调用修改商品价格方法
         result = get_goods_detail.get_goods_detail(goodsId=goodsId, storeId=storeId)
         res = {

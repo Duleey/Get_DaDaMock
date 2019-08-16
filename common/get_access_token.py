@@ -15,14 +15,29 @@ from util.Logger import Logger
 获取access_token
 '''
 class GetAccessToken:
-    def __init__(self, env='QA'):
+    def __init__(self, pid, env='QA'):
         self.log = Logger("debug")
+
+        # 判断pid
+        if pid == None:
+            if env == 'QA':
+                self.pid = 1
+            if env == 'DEV':
+                self.pid = 17
+            # TODO 预留prod环境
+            if env == 'PROD':
+                self.pid = 17
+        else:
+            self.pid = pid
 
         self.opera = OperationIni(fileName='config.ini', pathName='config')
 
         # 获取鉴权参数
-        self.clientId = translate_env_access_token(env=env)[0]
-        self.clientSecret = translate_env_access_token(env=env)[1]
+        try:
+            self.clientId = translate_env_access_token(env=env, pid=self.pid)[0]
+            self.clientSecret = translate_env_access_token(env=env, pid=self.pid)[1]
+        except Exception as f:
+            self.log.error("获取鉴权参数失败，检查pid是否正确，错误日志：{0}".format(f))
 
         self.env = env
         # env字符串转小写
@@ -33,16 +48,6 @@ class GetAccessToken:
         # 获取ini文件中的base_url
         base_url = self.opera.read_ini(section='access_token', key=self.key)
         self.url = base_url.format(self.clientId, self.clientSecret)
-
-
-        # if env == 'DEV':
-        #     self.clientId = self.opera.read_ini(section='access_token', key='dev_clientId')
-        #     self.clientSecret = self.opera.read_ini(section='access_token', key='dev_clientSecret')
-        #     self.access_token = self.opera.read_ini(section='access_token', key='dev_access_token')
-        # if env == 'QA':
-        #     self.clientId = self.opera.read_ini(section='access_token', key='qa_clientId')
-        #     self.clientSecret = self.opera.read_ini(section='access_token', key='qa_clientSecret')
-        #     self.access_token = self.opera.read_ini(section='access_token', key='qa_access_token')
 
     def get_access_token(self):
         '''
@@ -63,7 +68,7 @@ class GetAccessToken:
         把最新的access_token存入ini文件,自动覆盖旧的access_token
         :return:
         '''
-        key = self.l_env + '_access_token'
+        key = self.l_env + '_{0}_access_token'.format(self.pid)
         access_token = self.get_access_token()
         # 保存最新获取的access_token，存入ini文件
         self.opera.write_ini(section='access_token', data=access_token, key=key)
@@ -76,10 +81,10 @@ class GetAccessToken:
         :return:
         '''
         # 获取ini文件中已有的access_token
-        access_token = get_env_access_token(env=self.env)
+        access_token = get_env_access_token(env=self.env, pid=self.pid)
         self.log.info('获取到ini文件中已有的access_token为：{0}'.format(access_token))
         return access_token
 
 
-# g = GetAccessToken(env='DEV')
+# g = GetAccessToken(env='QA', pid=None)
 # print(g.set_access_token())

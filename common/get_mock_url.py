@@ -32,9 +32,9 @@ class GetMockUrl:
         url = base_url + opera.read_ini(section=env, key='url')
 
 
-        self.userName = opera.read_ini(section='CONFIG', key='userName')
-        self.passWord = opera.read_ini(section='CONFIG', key='passWord')
-        self.mockServiceName = opera.read_ini(section='CONFIG', key='mockServiceName')
+        self.userName = opera.read_ini(section='CONFIG', key='username')
+        self.passWord = opera.read_ini(section='CONFIG', key='password')
+        self.mockServiceName = opera.read_ini(section='CONFIG', key='mock_dada_servicename')
 
         chrome_options = Options()
         # 设置chrome浏览器无界面模式
@@ -77,5 +77,5 @@ class GetMockUrl:
 
 
 
-# g = GetMockUrl()
+# g = GetMockUrl(env='QA')
 # g.get_mock_url()

@@ -15,11 +15,11 @@ from util.Logger import Logger
 获取商品详情
 '''
 class GetGoodsDetail:
-    def __init__(self, env='QA'):
+    def __init__(self, pid, env='QA'):
         self.log = Logger("debug")
         opera = OperationIni(fileName='config.ini', pathName='config')
         self.env = env
-        self.get_access_token = GetAccessToken(env=env)
+        self.get_access_token = GetAccessToken(pid=pid, env=env)
 
         # env字符串转小写
         env = env.lower()

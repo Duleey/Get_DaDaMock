@@ -25,11 +25,12 @@ from util.Logger import Logger
 新增商品
 '''
 class addGoods:
-    def __init__(self, env='QA'):
+    def __init__(self, pid, env='QA'):
         self.log = Logger("debug")
         opera = OperationIni(fileName='config.ini', pathName='config')
         self.env = env
-        self.get_access_token = GetAccessToken(env=env)
+        self.pid = pid
+        self.get_access_token = GetAccessToken(env=env, pid=pid)
 
         # env字符串转小写
         env = env.lower()
@@ -40,13 +41,13 @@ class addGoods:
         self.access_token = self.get_access_token.get_ini_access_token()
 
 
-    def add_goods(self, pid, storeId=None, outerGoodsCode=None, deliveryTypeIdList=None, title=None, salePrice=None, originalPrice=None,
+    def add_goods(self, storeId=None, outerGoodsCode=None, outerSkuCode=None, deliveryTypeIdList=None, title=None, salePrice=None, originalPrice=None,
                   adviseSalePriceMin=None, adviseSalePriceMax=None, goodsImageUrl=None):
         """
         新增商品
-        :param pid: 商家id
         :param storeId: 门店id
         :param outerGoodsCode: 外部spu编码
+        :param outerSkuCode: 商家编码
         :param deliveryTypeIdList: 配送类型列表，可传多个配送类型，用,隔开（1.同城限时达;2.全城配;3.包含1和2）
         :param title: 商品标题
         :param salePrice: 售价
@@ -58,23 +59,35 @@ class addGoods:
         """
         url = self.url.format(self.path, self.access_token)
 
-        if pid == None:
+        pid = self.pid
+        if self.pid == None:
             if self.env == 'QA':
                 pid = 1
             if self.env == 'DEV':
                 pid = 17
+            # TODO 预留prod环境
+            if self.env == 'PROD':
+                pid = 17
+        # print(pid)
 
         if storeId == None:
             if self.env == "QA":
                 storeId = 1001
             if self.env == "DEV":
                 storeId = 3017
+            # TODO 预留prod环境
+            if self.env == "PROD":
+                storeId = 3017
 
         if outerGoodsCode == None:
             # 使用秒级时间戳自动拼接spu
             t = int(time.time())
-            d = 'zd' + str(t)
+            d = 'spu' + str(t)
             outerGoodsCode = d
+
+        # 商家编码
+        if outerSkuCode != None:
+            outerSkuCode = outerSkuCode
 
         deliveryTypeId = None
         if deliveryTypeIdList != None:
@@ -88,7 +101,7 @@ class addGoods:
                     deliveryTypeId = deliveryTypeId
             else:
 
-                deliveryType = get_delivery_type(env=self.env, pid=pid, storeId=storeId, deliveryType=int(deliveryTypeIdList))[1]
+                deliveryType = get_delivery_type(env=self.env, pid=self.pid, storeId=storeId, deliveryType=int(deliveryTypeIdList))[1]
                 if deliveryType == None:
                     return {"status": 103, "message": "当前门店该配送方式不存在"}
                 else:
@@ -97,20 +110,23 @@ class addGoods:
 
         if deliveryTypeIdList == None:
             if self.env == "QA":
-                deliveryTypeId = [4]
+                deliveryTypeId = [2]
             if self.env == "DEV":
+                deliveryTypeId = [209435]
+            # TODO 预留prod环境
+            if self.env == "PROD":
                 deliveryTypeId = [209435]
 
         if salePrice == None:
             salePrice = 0.01
-        if originalPrice == None:
-            originalPrice = 1
+        # if originalPrice == None:
+        #     originalPrice = 1
         if adviseSalePriceMin == None:
             adviseSalePriceMin = 0.01
         if adviseSalePriceMax == None:
             adviseSalePriceMax = 1
         if goodsImageUrl == None:
-            goodsImageUrl = "https://www.baidu.com/a016cb2de441406289433fd0c71c56bd.png"
+            goodsImageUrl = "https://image-c.weimobmxd.com/saas-wxbiz/a016cb2de441406289433fd0c71c56bd.png"
 
 
 
@@ -139,7 +155,7 @@ class addGoods:
         "categoryNameTree": "食品,零食/坚果/特产,其他休闲零食",
         "skuList": [
             {
-                "outerSkuCode": None,
+                "outerSkuCode": outerSkuCode,
                 "productType": 1,
                 "singleProductId": 116130117,
                 "combineProduct": {},
@@ -184,8 +200,8 @@ class addGoods:
             self.get_access_token.set_access_token()
             # 注意：这里一定要重新获取一次ini文件中的access_token
             new_access_token = self.get_access_token.get_ini_access_token()
-            self.log.warning('开始：调用add_goods方法，请求地址为：{0}，入参为：{1}'.format(url, json_data))
             url = self.url.format(self.path, new_access_token)
+            self.log.warning('开始：调用add_goods方法，请求地址为：{0}，入参为：{1}'.format(url, json_data))
             requests.packages.urllib3.disable_warnings()
             res = requests.post(url=url, json=json_data, verify=False)
             # print(res.json(), url, json_data)

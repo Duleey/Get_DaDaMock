@@ -19,6 +19,7 @@ def update_goods_stock():
 
     if request.method == "POST":
         env = request.form.get('env', None)
+        pid = request.form.get('pid', None)
         storeId = request.form.get('storeId', None)
         goodsId = request.form.get('goodsId', None)
         editStockNum = request.form.get('editStockNum', None)
@@ -38,7 +39,7 @@ def update_goods_stock():
         # 字符串转大写
         env = env.upper()
         # 初始化修改商品价格类
-        update_stock = updateGoodsStock(env=env)
+        update_stock = updateGoodsStock(env=env, pid=pid)
         # 调用修改商品价格方法
         result = update_stock.update_goods_stock( goodsId=goodsId, editStockNum=editStockNum, storeId=storeId)
         res = {
