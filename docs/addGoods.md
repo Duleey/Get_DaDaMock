@@ -14,11 +14,14 @@
 |参数名|必选|类型|说明|
 |:----    |:---|:----- |-----   |
 |env |否  |string |环境（不传则默认qa环境）   |
+|pid |否  |string |商家id（不传则根据env判断，dev为17，qa为1）   |
 |storeId |否  |string |门店id（不传则默认env环境下的商家店）   |
 |outerGoodsCode |否  |string |spu编码（不传则默认zd+当前秒级时间戳）   |
+|outerSkuCode |否  |string |商家编码   |
+|deliveryTypeIdList |否  |string |配送id   |
 |title |是  |string | 商品标题|
 |salePrice     |否  |string | 售价（不传则默认0.01）    |
-|originalPrice     |否  |string | 市场价（不传则默认1）    |
+|originalPrice     |否  |string | 市场价（不传则默认空）    |
 |adviseSalePriceMin     |否  |string | 门店售价范围开始值（不传则默认0.01）    |
 |adviseSalePriceMax     |否  |string | 门店售价范围结束值（不传则默认1）    |
 |goodsImageUrl     |否  |string | 商品图片（不传则默认一张图片）    |
@@ -34,7 +37,7 @@
 |originalPrice |1 |
 |adviseSalePriceMin |0.01 |
 |adviseSalePriceMax |1 |
-|goodsImageUrl |https://www.baidu.com/a016cb2de441406289433fd0c71c56bd.png |
+|goodsImageUrl |https://image-c.weimobmxd.com/saas-wxbiz/a016cb2de441406289433fd0c71c56bd.png |
 
 - 备注：originalPrice需要大于salePrice
 
