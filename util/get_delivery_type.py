@@ -47,8 +47,8 @@ def delivery_type(result, deliveryType):
 
 def get_delivery_type(pid=None, env='QA', storeId=None, deliveryType=1, goodsId=""):
     opera = OperationIni(fileName='config.ini', pathName='config')
-    get_access_token = GetAccessToken(env=env)
-
+    get_access_token = GetAccessToken(env=env, pid=pid)
+    print(pid)
     # env字符串转小写
     x_env = env.lower()
     key = x_env + '_url'
