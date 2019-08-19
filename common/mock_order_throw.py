@@ -60,7 +60,10 @@ class MockOrderThrow:
             r = requests.post(url=mock_url, data=data, headers=headers, timeout=3)
             code = r.status_code
             result = r.json()
+            print('我要看:{0}'.format(result))
             self.log.info("结束:调用订单抛出服务接口，返回数据打印:{0}".format(result))
+            # 关闭VPN
+            stop_vpn()
             return result
         except Exception as f:
             print(f)
@@ -79,14 +82,17 @@ class MockOrderThrow:
                     r = requests.post(url=mock_url, data=data, headers=headers)
                     result = r.json()
                     self.log.warning("结束:调用订单抛出服务接口，返回数据打印:{0}".format(result))
+                    # 关闭VPN
+                    stop_vpn()
                     return result
                 except Exception as f:
                     msg = {'msg':'发生未知错误,请联系管理员,错误日志为:{0}'.format(f)}
                     self.log.error('发生未知错误,请联系管理员,错误日志为:{0}'.format(f))
+                    # 关闭VPN
+                    stop_vpn()
                     return msg
-        # 关闭VPN
-        stop_vpn()
+
 
 
 # g = MockOrderThrow(pid=1,env='QA')
-# g.mock_order_throw(orderNo='10085010113')
+# g.mock_order_throw(orderNo='10094010113')
