@@ -32,9 +32,9 @@ def mock_order_throw():
             return Response(json.dumps(res), mimetype='application/json')
 
         if pid == None:
-            if env == 'DEV':
+            if env == 'DEV' or env == 'dev':
                 pid = 3017
-            if env == 'QA':
+            if env == 'QA' or env == 'qa':
                 pid = 1
 
         # 字符串转大写
