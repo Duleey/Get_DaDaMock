@@ -19,6 +19,7 @@ def update_goods_shelf_status():
 
     if request.method == "POST":
         env = request.form.get('env', None)
+        pid = request.form.get('pid', None)
         goodsIdList = request.form.get('goodsIdList', None)
         isPutAway = request.form.get('isPutAway', None)
         storeId = request.form.get('storeId', None)
@@ -38,7 +39,7 @@ def update_goods_shelf_status():
         # 字符串转大写
         env = env.upper()
         # 初始化修改商品价格类
-        update_shelf_status = updateGoodsShelfStatus(env=env)
+        update_shelf_status = updateGoodsShelfStatus(env=env, pid=pid)
         # 调用修改商品价格方法
         result = update_shelf_status.update_goods_shelf_status(goodsIdList=goodsIdList, isPutAway=isPutAway, storeId=storeId)
         res = {

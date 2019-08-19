@@ -13,7 +13,8 @@
 
 |参数名|必选|类型|说明|
 |:----    |:---|:----- |-----   |
-|env |是  |string |环境（不传则默认qa环境）   |
+|env |否  |string |环境（不传则默认qa环境）   |
+|pid |否  |string |商家id（不传则根据env判断，dev为17，qa为1）   |
 |storeId |是  |string | 门店id    |
 |goodsId     |是  |string | 商品id    |
 |editStockNum     |是  |int | 需要修改的库存    |
@@ -31,16 +32,27 @@
 
 ``` 
   {
-    "error_code": 0,
+    "code": 1,
+    "msg": "请求成功",
+    "请求场景": "修改商品库存",
     "data": {
-      "uid": "1",
-      "username": "12154545",
-      "name": "吴系挂",
-      "groupid": 2 ,
-      "reg_time": "1436864169",
-      "last_login_time": "0",
+        "code": {
+            "errcode": "0",
+            "errmsg": "处理成功"
+        },
+        "data": {
+            "result": true,
+            "failSkuIdList": null,
+            "skuList": null,
+            "distributorId": null,
+            "goodsId": null,
+            "goodsDetailResultVoList": null,
+            "outerGoodsIdList": null,
+            "distributorResponse": null,
+            "errorMsg": null
+        }
     }
-  }
+}
 ```
 
 

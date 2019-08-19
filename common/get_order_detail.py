@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# @Time    : 2019/8/8 13:39
+# @Time    : 2019/8/15 13:58
 # @Author  : Weiqiang.long
 # @Site    : 
-# @File    : get_goods_detail.py
+# @File    : get_order_detail.py
 # @Software: PyCharm
+import json
 
 import requests
 from common.get_access_token import GetAccessToken
@@ -12,44 +13,34 @@ from util.readTxt import OperationIni
 from util.Logger import Logger
 
 '''
-获取商品详情
+获取订单详情
 '''
-class GetGoodsDetail:
+class GetOrderDetail:
     def __init__(self, pid, env='QA'):
         self.log = Logger("debug")
         opera = OperationIni(fileName='config.ini', pathName='config')
         self.env = env
-        self.get_access_token = GetAccessToken(pid=pid, env=env)
+        self.get_access_token = GetAccessToken(env=env, pid=pid)
 
         # env字符串转小写
         env = env.lower()
         key = env + '_url'
         self.url = opera.read_ini(section='goods', key=key)
-        self.path = opera.read_ini(section='goods', key='queryGoodsDetail')
+        self.path = opera.read_ini(section='goods', key='queryOrderDetail')
 
         self.access_token = self.get_access_token.get_ini_access_token()
 
-        # if env == 'QA':
-        #     self.access_token = opera.read_ini(section='access_token', key='qa_access_token')
-        # if env == 'DEV':
-        #     self.access_token = opera.read_ini(section='access_token', key='dev_access_token')
 
-
-    def get_goods_detail(self, goodsId, storeId=None):
+    def get_order_detail(self, orderNo):
         '''
-        获取商品详情
-        :param goodsId: 商品id
-        :param storeId: 门店id
-        :return: rsq, 商品skuId
+        获取订单详情
+        :param orderNo: 订单id
+        :return: rsq
         '''
         url = self.url.format(self.path, self.access_token)
-        # json_data = None
-        if storeId == None:
-            json_data = {'goodsId': goodsId}
-        else:
-            json_data = {'goodsId': goodsId, 'storeId': storeId}
+        json_data = {'orderNo': orderNo}
 
-        self.log.info('开始：调用get_goods_detail方法，请求地址为：{0}，入参为：{1}'.format(url, json_data))
+        self.log.info('开始：调用get_order_detail方法，请求地址为：{0}，入参为：{1}'.format(url, json_data))
         requests.packages.urllib3.disable_warnings()
         r = requests.post(url=url, json=json_data, verify=False)
         # 如果access_token无效
@@ -59,15 +50,14 @@ class GetGoodsDetail:
             self.get_access_token.set_access_token()
             # 注意：这里一定要重新获取一次ini文件中的access_token
             new_access_token = self.get_access_token.get_ini_access_token()
-            self.log.warning('开始：调用get_goods_detail方法，请求地址为：{0}，入参为：{1}'.format(url, json_data))
+            self.log.warning('开始：调用get_order_detail方法，请求地址为：{0}，入参为：{1}'.format(url, json_data))
             url = self.url.format(self.path, new_access_token)
             requests.packages.urllib3.disable_warnings()
             res = requests.post(url=url, json=json_data, verify=False)
             # print(res.json(), url, json_data)
             try:
-                skuId = res.json()['data']['goods']['skuList'][0]['skuId']
-                self.log.warning('结束：调用get_goods_detail方法，返回数据为:{0}，返回skuId为：{1}'.format(res.json(), skuId))
-                return res.json(), skuId
+                self.log.warning('结束：调用get_order_detail方法，返回数据为:{0}'.format(res.json()))
+                return res.json()
             except Exception as f:
                 # print(f)
                 self.log.error('调用获取商品详情接口失败，错误日志为：{0}'.format(f))
@@ -83,14 +73,13 @@ class GetGoodsDetail:
             # 注意：这里一定要重新获取一次ini文件中的access_token
             new_access_token = self.get_access_token.get_ini_access_token()
             url = self.url.format(self.path, new_access_token)
-            self.log.warning('开始：调用get_goods_detail方法，请求地址为：{0}，入参为：{1}'.format(url, json_data))
+            self.log.warning('开始：调用get_order_detail方法，请求地址为：{0}，入参为：{1}'.format(url, json_data))
             requests.packages.urllib3.disable_warnings()
             res = requests.post(url=url, json=json_data, verify=False)
             # print(res.json(), url, json_data)
             try:
-                skuId = res.json()['data']['goods']['skuList'][0]['skuId']
-                self.log.warning('结束：调用get_goods_detail方法，返回数据为:{0}，返回skuId为：{1}'.format(res.json(), skuId))
-                return res.json(), skuId
+                self.log.warning('结束：调用get_order_detail方法，返回数据为:{0}'.format(res.json()))
+                return res.json()
             except Exception as f:
                 # print(f)
                 self.log.error('调用获取商品详情接口失败，错误日志为：{0}'.format(f))
@@ -99,17 +88,42 @@ class GetGoodsDetail:
 
         else:
             try:
-                skuId = r.json()['data']['goods']['skuList'][0]['skuId']
-                self.log.info('结束：调用get_goods_detail方法，返回数据为:{0}，返回skuId为：{1}'.format(r.json(), skuId))
-                return r.json(), r.json()['data']['goods']['skuList'][0]['skuId']
+                self.log.info('结束：调用get_order_detail方法，返回数据为:{0}'.format(r.json()))
+                return r.json()
             except Exception as f:
                 # print(f)
                 self.log.error('调用获取商品详情接口失败1，错误日志为：{0}'.format(f))
                 # return {'msg': '底层接口请求失败，请检查所传字段的数据是否正确'}
                 return r.json()
 
+    def get_order_item_id_skuNum(self, orderNo):
+        '''
+        获取订单pickingPackageList,storeId,wid
+        :param orderNo: 订单号
+        :return: 返回pickingPackageList,storeId,wid
+        '''
+        # 调用get_order_detail方法获取返回订单详情数据
+        result = self.get_order_detail(orderNo=orderNo)
+
+        try:
+            itemList = result['data']['itemList']
+            # 获取该笔订单下的storeId
+            storeId = result['data']['merchantInfo']['storeId']
+            # 获取该笔订单下的wid
+            wid = result['data']['buyerInfo']['wid']
+
+            pickingPackageList = []
+            for i in itemList:
+                # 获取itemId
+                itemId = i['id']
+                # 获取pickSkuNum
+                pickSkuNum = i['skuNum']
+                d = {"itemId": itemId, "pickSkuNum": pickSkuNum}
+                pickingPackageList.append(d)
+            return pickingPackageList, storeId, wid
+        except Exception as f:
+            self.log.error('获取订单详情中的字段失败，错误日志为：{0}'.format(f))
 
 
-
-# g = GetGoodsDetail(env='DEV')
-# print(g.get_goods_detail('125950117','305017'))
+# g = GetOrderDetail(env='QA',pid=1)
+# print(g.get_order_item_id_skuNum('10078010113'))

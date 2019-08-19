@@ -53,7 +53,8 @@ class GetAuth:
             'passwordType': 'new'
         }
         self.log.info('开始：调用获取B端后台token接口，请求地址为：{0}，入参为：{1}，请求头为：{2}'.format(self.url, data, self.headers))
-        r = requests.post(url=self.url, data=data, headers=self.headers)
+        requests.packages.urllib3.disable_warnings()
+        r = requests.post(url=self.url, data=data, headers=self.headers, verify=False)
         try:
             token = r.json()['data']['token']
             self.log.info('结束：调用获取B端后台token接口，获取到token为：{0}'.format(token))
