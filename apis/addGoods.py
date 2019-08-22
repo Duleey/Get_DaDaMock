@@ -22,6 +22,7 @@ def add_goods():
         pid = request.form.get('pid', None)
         storeId = request.form.get('storeId', None)
         outerGoodsCode = request.form.get('outerGoodsCode', None)
+        outerSkuCode = request.form.get('outerSkuCode', None)
         deliveryTypeIdList = request.form.get('deliveryTypeIdList', None)
         title = request.form.get('title', None)
         salePrice = request.form.get('salePrice', None)
@@ -30,7 +31,6 @@ def add_goods():
         adviseSalePriceMax = request.form.get('adviseSalePriceMax', None)
         goodsImageUrl = request.form.get('goodsImageUrl', None)
 
-        # print(deliveryTypeIdList)
 
         if title == "" or title == None:
             res = {"status":102, "message":"请求参数为空"}
@@ -44,9 +44,9 @@ def add_goods():
         # 字符串转大写
         env = env.upper()
         # 初始化新增商品类
-        add_goods = addGoods(env=env)
+        add_goods = addGoods(env=env, pid=pid)
         # 调用新增商品方法
-        result = add_goods.add_goods(storeId=storeId, pid=pid, outerGoodsCode=outerGoodsCode, deliveryTypeIdList=deliveryTypeIdList,
+        result = add_goods.add_goods(storeId=storeId, outerGoodsCode=outerGoodsCode, outerSkuCode=outerSkuCode, deliveryTypeIdList=deliveryTypeIdList,
                                      title=title, salePrice=salePrice, originalPrice=originalPrice,
                                      adviseSalePriceMin=adviseSalePriceMin, adviseSalePriceMax=adviseSalePriceMax, goodsImageUrl=goodsImageUrl)
 

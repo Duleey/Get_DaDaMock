@@ -13,11 +13,12 @@
 
 |参数名|必选|类型|说明|
 |:----    |:---|:----- |-----   |
-|env |是  |string |环境（不传则默认qa环境）   |
+|env |否  |string |环境（不传则默认qa环境）   |
+|pid |否  |string |商家id（不传则根据env判断，dev为17，qa为1）   |
 |storeId |是  |string | 门店id|
 |goodsId     |是  |string | 商品id    |
-|originalPrice     |是  |string | 市场价    |
-|salePrice     |是  |string | 商家统一价    |
+|originalPrice     |否  |string | 市场价    |
+|salePrice     |是  |string | 商家统一价（门店id为商家店时，此字段代表商家统一价；门店id为门店时，此字段代表门店售价）   |
 
 **请求参数示例**
 

@@ -16,11 +16,11 @@ from util.Logger import Logger
 修改商品库存
 '''
 class updateGoodsStock:
-    def __init__(self, env='QA'):
+    def __init__(self, pid, env='QA'):
         self.log = Logger("debug")
         opera = OperationIni(fileName='config.ini', pathName='config')
-        self.get_skuId = GetGoodsDetail(env=env)
-        self.get_access_token = GetAccessToken(env=env)
+        self.get_skuId = GetGoodsDetail(env=env, pid=pid)
+        self.get_access_token = GetAccessToken(env=env, pid=pid)
 
         # env字符串转小写
         env = env.lower()
@@ -28,15 +28,7 @@ class updateGoodsStock:
 
         self.base_url = opera.read_ini(section='goods', key=key)
         self.path = opera.read_ini(section='goods', key='wholeUpdateStock')
-
-
         self.access_token = self.get_access_token.get_ini_access_token()
-
-        # if env == 'QA':
-        #     self.access_token = opera.read_ini(section='access_token', key='qa_access_token')
-        # if env == 'DEV':
-        #     self.access_token = opera.read_ini(section='access_token', key='dev_access_token')
-
 
     def update_goods_stock(self, goodsId, editStockNum, storeId=None):
         '''
@@ -46,7 +38,6 @@ class updateGoodsStock:
         :param storeId: 门店id
         :return: rsq
         '''
-
         url = self.base_url.format(self.path, self.access_token)
         # 获取skuId
         try:
@@ -62,7 +53,8 @@ class updateGoodsStock:
                 ]
             }
             self.log.info('开始：调用update_goods_stock方法，请求地址为：{0}，入参为：{1}'.format(url, json_data))
-            r = requests.post(url=url, json=json_data)
+            requests.packages.urllib3.disable_warnings()
+            r = requests.post(url=url, json=json_data, verify=False)
             # 如果access_token无效
             if r.json()['data'] == 'invalid accesstoken':
                 # 获取最新的token并存入ini文件
@@ -72,7 +64,8 @@ class updateGoodsStock:
                 new_access_token = self.get_access_token.get_ini_access_token()
                 url = self.base_url.format(self.path, new_access_token)
                 self.log.warning('开始：调用update_goods_stock方法，请求地址为：{0}，入参为：{1}'.format(url, json_data))
-                res = requests.post(url=url, json=json_data)
+                requests.packages.urllib3.disable_warnings()
+                res = requests.post(url=url, json=json_data, verify=False)
                 self.log.warning('结束：调用update_goods_stock方法，返回数据为:{0}'.format(res.json()))
                 return res.json()
             else:
