@@ -13,6 +13,7 @@
 |参数名|必选|类型|说明|
 |:----    |:---|:----- |-----   |
 |env |否  |string |环境（不传则默认qa环境）   |
+|pid |否  |string |商家id（不传则根据env判断，dev为17，qa为1）   |
 |goodsId |是  |string | 商品id    |
 |storeId     |否  |string | 门店id    |
 
