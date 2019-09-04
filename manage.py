@@ -11,6 +11,7 @@ from flask import Flask, request, Response
 from flask_cors import CORS
 from apis.get_dada_mock import getDaDaMock
 from apis.addGoods import AddGoods
+from apis.mockOrderThrow import mockOrderThrow
 from apis.updateGoodsPrice import updatePrice
 from apis.updateGoodsStock import updateStock
 from apis.updateGoodsShelfStatus import updateShelfStatus
@@ -24,6 +25,7 @@ app.register_blueprint(updatePrice, url_prefix="/api")
 app.register_blueprint(updateStock, url_prefix="/api")
 app.register_blueprint(updateShelfStatus, url_prefix="/api")
 app.register_blueprint(getGoodsDetail, url_prefix="/api")
+app.register_blueprint(mockOrderThrow, url_prefix="/api")
 
 @app.route('/apis', methods=['GET'])
 def get_apis():
@@ -47,7 +49,9 @@ def get_apis():
                 "path": "/addGoods",
                 "params": {
                     "env": "环境",
+                    "pid": "商家id",
                     "storeId": "门店id",
+                    "deliveryTypeIdList":"配送方式id",
                     "outerGoodsCode": "spu编码",
                     "title": "商品标题",
                     "salePrice": "售价",
@@ -91,6 +95,14 @@ def get_apis():
                     "storeId": "门店id",
                     "goodsId": "商品id",
                     "editStockNum": "需要修改的库存"
+                }
+            },
+            "操作订单抛单": {
+                "path": "/mockOrderThrow",
+                "params": {
+                    "env": "环境",
+                    "pid": "商家id",
+                    "orderNo": "订单id"
                 }
             }
         }

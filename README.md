@@ -26,5 +26,9 @@
 - [多环境的商品库存修改](https://github.com/lwq6783293/Get_DaDaMock/blob/master/docs/updateGoodsStock.md "多环境的商品库存修改")
 - [多环境的商品上下架状态更改](https://github.com/lwq6783293/Get_DaDaMock/blob/master/docs/updateGoodsShelfStatus.md "多环境的商品上下架状态更改")
 - [多环境的获取商品详情](https://github.com/lwq6783293/Get_DaDaMock/blob/master/docs/getGoodsDetail.md "多环境的获取商品详情")
+- [多环境操作订单拣货](https://github.com/lwq6783293/Get_DaDaMock/blob/master/docs/mockOrderThrow.md "多环境操作订单拣货")
+
+
+
 
 

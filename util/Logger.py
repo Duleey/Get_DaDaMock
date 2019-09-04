@@ -13,11 +13,11 @@ import logging
 from util.singleton import Singleton
 
 
-# @Singleton  # 如需打印不同路径的日志（运行日志、审计日志），则不能使用单例模式（注释或删除此行）。此外，还需设定参数name。
+@Singleton  # 如需打印不同路径的日志（运行日志、审计日志），则不能使用单例模式（注释或删除此行）。此外，还需设定参数name。
 # name=os.path.split(os.path.splitext(sys.argv[0])[0])[-1]
 class Logger:
     def __init__(self, set_level="INFO",
-                 name=os.path.split(os.path.splitext(sys.argv[0])[0])[-1],
+                 name=None,
                  log_name=time.strftime("%Y-%m-%d.log", time.localtime()),
                  log_path=os.path.join(os.path.dirname(os.path.dirname(__file__)),'log'),
                  use_console=True):
@@ -35,7 +35,8 @@ class Logger:
             getattr(logging, set_level.upper()) if hasattr(logging, set_level.upper()) else logging.INFO)  # 设置日志级别
         if not os.path.exists(log_path):  # 创建日志目录
             os.makedirs(log_path)
-        formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+        self.filename = name
+        formatter = logging.Formatter("%(asctime)s - %(filename)s - %(levelname)s - %(message)s")
         handler_list = list()
         handler_list.append(logging.FileHandler(os.path.join(log_path, log_name), encoding="utf-8"))
         if use_console:
