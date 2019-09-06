@@ -32,18 +32,22 @@ class MockOrderThrow:
         mock_url = 'http://' + url + ':8080/service'
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
 
+        # operationType = None
+
         if pickNum != None:
             # 根据逗号拆分字符串，并通过map函数对字符串进行迭代，存入list列表，且确保列表中的元素为int类型
             pickNums = pickNum.split(",")
             pickNum_list = list(map(int, pickNums))
             self.log.info("当前模式为部分/整单缺货模式，商品发货数量列表为：{0}".format(pickNum_list))
             order_detail = self.get_order_detail.get_order_item_id_skuNum_section(orderNo=orderNo,pickSkuNum=pickNum_list)
+            operationType = "当前模式为部分/整单缺货模式，商品发货数量列表为：{0}".format(pickNum_list)
             pickingPackageList = order_detail[0]
             if len(pickNum_list) != len(pickingPackageList):
                 return {"errcode": -100, "errmsg": "pickNum参数数量与订单商品数量不一致，请检查pickNum参数长度"}
         else:
             self.log.info("当前模式为整单发货模式")
             order_detail = self.get_order_detail.get_order_item_id_skuNum(orderNo=orderNo)
+            operationType = "当前模式为整单发货模式"
             pickingPackageList = order_detail[0]
         storeId = order_detail[1]
         wid = order_detail[2]
@@ -71,11 +75,11 @@ class MockOrderThrow:
             r = requests.post(url=mock_url, data=data, headers=headers, timeout=3)
             code = r.status_code
             result = r.json()
-            print('我要看:{0}'.format(result))
+            # print('我要看:{0}'.format(result))
             self.log.info("结束:调用订单抛出服务接口，返回数据打印:{0}".format(result))
             # 关闭VPN
             stop_vpn()
-            return result
+            return result, operationType
         except Exception as f:
             print(f)
             status = False
@@ -95,7 +99,7 @@ class MockOrderThrow:
                     self.log.warning("结束:调用订单抛出服务接口，返回数据打印:{0}".format(result))
                     # 关闭VPN
                     stop_vpn()
-                    return result
+                    return result, operationType
                 except Exception as f:
                     msg = {'msg':'发生未知错误,请联系管理员,错误日志为:{0}'.format(f)}
                     self.log.error('发生未知错误,请联系管理员,错误日志为:{0}'.format(f))

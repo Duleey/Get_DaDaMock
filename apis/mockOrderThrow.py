@@ -51,7 +51,8 @@ def mock_order_throw():
             "code": 1,
             "msg": "请求成功",
             "请求场景": "操作订单拣货",
-            "data": result
+            "操作模式": result[1],
+            "data": result[0]
         }
         return Response(json.dumps(res), mimetype='application/json')
     elif request.method == "GET":
