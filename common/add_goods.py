@@ -42,7 +42,7 @@ class addGoods:
 
 
     def add_goods(self, storeId=None, outerGoodsCode=None, outerSkuCode=None, deliveryTypeIdList=None, title=None, salePrice=None, originalPrice=None,
-                  adviseSalePriceMin=None, adviseSalePriceMax=None, goodsImageUrl=None):
+                  adviseSalePriceMin=None, adviseSalePriceMax=None, goodsWeight=None, goodsVolume=None, goodsImageUrl=None):
         """
         新增商品
         :param storeId: 门店id
@@ -54,6 +54,8 @@ class addGoods:
         :param originalPrice: 市场价
         :param adviseSalePriceMin: 门店售价范围开始值
         :param adviseSalePriceMax: 门店售价范围结束值
+        :param goodsWeight: 商品重量(如果运费模板是按照重量计算，该字段必填，kg，两位小数)
+        :param goodsVolume: 商品体积(如果运费模板是按照体积计算，该字段必填，m3，两位小数)
         :param goodsImageUrl: 商品图片
         :return:
         """
@@ -82,7 +84,7 @@ class addGoods:
         if outerGoodsCode == None:
             # 使用秒级时间戳自动拼接spu
             t = int(time.time())
-            d = 'spu' + str(t)
+            d = str(t)
             outerGoodsCode = d
 
         # 商家编码
@@ -164,8 +166,8 @@ class addGoods:
                 "adviseSalePriceMax": adviseSalePriceMax,
                 "originalPrice": originalPrice,
                 "b2cSku": {
-                    "weight": None,
-                    "volume": None
+                    "weight": goodsWeight,
+                    "volume": goodsVolume
                 },
                 "isDisabled": False,
                 "editStockNum": 0

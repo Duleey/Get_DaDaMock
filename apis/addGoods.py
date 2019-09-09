@@ -29,6 +29,8 @@ def add_goods():
         originalPrice = request.form.get('originalPrice', None)
         adviseSalePriceMin = request.form.get('adviseSalePriceMin', None)
         adviseSalePriceMax = request.form.get('adviseSalePriceMax', None)
+        goodsWeight = request.form.get('goodsWeight', None)
+        goodsVolume = request.form.get('goodsVolume', None)
         goodsImageUrl = request.form.get('goodsImageUrl', None)
 
 
@@ -47,8 +49,8 @@ def add_goods():
         add_goods = addGoods(env=env, pid=pid)
         # 调用新增商品方法
         result = add_goods.add_goods(storeId=storeId, outerGoodsCode=outerGoodsCode, outerSkuCode=outerSkuCode, deliveryTypeIdList=deliveryTypeIdList,
-                                     title=title, salePrice=salePrice, originalPrice=originalPrice,
-                                     adviseSalePriceMin=adviseSalePriceMin, adviseSalePriceMax=adviseSalePriceMax, goodsImageUrl=goodsImageUrl)
+                                     title=title, salePrice=salePrice, originalPrice=originalPrice, adviseSalePriceMin=adviseSalePriceMin,
+                                     adviseSalePriceMax=adviseSalePriceMax, goodsWeight=goodsWeight, goodsVolume=goodsVolume, goodsImageUrl=goodsImageUrl)
 
         res = {
             "code": 1,
