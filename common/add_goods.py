@@ -81,15 +81,17 @@ class addGoods:
             if self.env == "PROD":
                 storeId = 3017
 
+        # 使用秒级时间戳自动拼接spu
+        t = int(time.time())
+        d = str(t)
+        # SPU编码
         if outerGoodsCode == None:
-            # 使用秒级时间戳自动拼接spu
-            t = int(time.time())
-            d = str(t)
             outerGoodsCode = d
-
         # 商家编码
         if outerSkuCode != None:
             outerSkuCode = outerSkuCode
+        else:
+            outerSkuCode = d
 
         deliveryTypeId = None
         if deliveryTypeIdList != None:
