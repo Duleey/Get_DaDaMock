@@ -21,9 +21,9 @@ def delivery_type(result, deliveryType):
     :return: 配送id
     '''
     deliveryTypeName = None
-    if deliveryType == 1:
+    if deliveryType == 1 or deliveryType == "1":
         deliveryTypeName = '同城限时达'
-    if deliveryType == 2:
+    if deliveryType == 2 or deliveryType == "2":
         deliveryTypeName = '全城配'
     # 拿到deliveryTypeList列表
     dts = result['data']['deliveryTypeList']
@@ -37,7 +37,7 @@ def delivery_type(result, deliveryType):
             return d['deliveryId']
 
     # 支持同时两种配送方式
-    if deliveryType == 3:
+    if deliveryType == 3 or deliveryType == "3":
         deliveryIds = []
         for d in dts:
             deliveryIds.append(d['deliveryId'])
@@ -48,7 +48,7 @@ def delivery_type(result, deliveryType):
 def get_delivery_type(pid=None, env='QA', storeId=None, deliveryType=1, goodsId=""):
     opera = OperationIni(fileName='config.ini', pathName='config')
     get_access_token = GetAccessToken(env=env, pid=pid)
-    print(pid)
+    # print(pid)
     # env字符串转小写
     x_env = env.lower()
     key = x_env + '_url'
