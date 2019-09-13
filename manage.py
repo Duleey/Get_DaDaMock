@@ -16,6 +16,7 @@ from apis.updateGoodsPrice import updatePrice
 from apis.updateGoodsStock import updateStock
 from apis.updateGoodsShelfStatus import updateShelfStatus
 from apis.getGoodsDetail import getGoodsDetail
+from apis.updateStoreGoodsDeliveryType import updateDeliveryType
 
 app = Flask(__name__)
 # 注册蓝图，并指定其对应的前缀（url_prefix）
@@ -26,6 +27,7 @@ app.register_blueprint(updateStock, url_prefix="/api")
 app.register_blueprint(updateShelfStatus, url_prefix="/api")
 app.register_blueprint(getGoodsDetail, url_prefix="/api")
 app.register_blueprint(mockOrderThrow, url_prefix="/api")
+app.register_blueprint(updateDeliveryType, url_prefix="/api")
 
 @app.route('/apis', methods=['GET'])
 def get_apis():
