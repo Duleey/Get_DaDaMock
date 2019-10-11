@@ -117,4 +117,4 @@ def get_apis():
 
 if __name__ == '__main__':
     CORS(app, supports_credentials=True)
-    app.run(host='0.0.0.0', port=8089, debug=True)
+    app.run(host='0.0.0.0', port=8089, debug=False, threaded=True)
