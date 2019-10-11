@@ -8,9 +8,8 @@
 
 
 import os
-from util.Logger import Logger
+from util.Logger import logger as log
 
-log = Logger("debug")
 
 def data_dir(fileName=None,pathName='data'):
     """

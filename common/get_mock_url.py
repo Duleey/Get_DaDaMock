@@ -11,12 +11,12 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from util.readTxt import OperationIni
 from util import findPath
-from util.Logger import Logger
+from util.Logger import logger as log
 
 class GetMockUrl:
 
     def __init__(self, env):
-        self.log = Logger("debug")
+        self.log = log
 
         opera = OperationIni()
 

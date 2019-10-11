@@ -9,14 +9,14 @@
 import requests
 from util.get_disparate_env_data import translate_env_access_token, get_env_access_token
 from util.readTxt import OperationIni
-from util.Logger import Logger
+from util.Logger import logger as log
 
 '''
 获取access_token
 '''
 class GetAccessToken:
     def __init__(self, pid, env='QA'):
-        self.log = Logger("debug")
+        self.log = log
 
         # 判断pid
         if pid == None:

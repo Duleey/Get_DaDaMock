@@ -13,11 +13,10 @@ from util.readTxt import *
 from flask import Flask, Response, request
 from util.get_vpn import start_vpn,stop_vpn
 from flask import Blueprint
-from util.Logger import Logger
+from util.Logger import logger as log
 
 app = Flask(__name__)
 getDaDaMock = Blueprint('getDaDaMock', __name__)
-log = Logger("debug")
 
 @getDaDaMock.route('/getDaDaMock', methods=['POST', 'GET'])
 def get_dada_mock():

@@ -9,7 +9,7 @@
 import requests
 
 from common.get_order_detail import GetOrderDetail
-from util.Logger import Logger
+from util.Logger import logger as log
 from util.get_soa_server_ip import GetSoaServerIp
 from util.get_vpn import start_vpn, stop_vpn
 from util.readTxt import OperationIni
@@ -21,7 +21,7 @@ from util.readTxt import OperationIni
 class MockOrderThrow:
 
     def __init__(self, pid, env):
-        self.log = Logger("debug")
+        self.log = log
         self.pid = pid
         self.env = env
         self.opera = OperationIni()

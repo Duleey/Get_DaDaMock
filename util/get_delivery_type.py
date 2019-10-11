@@ -8,10 +8,9 @@
 import requests
 
 from common.get_access_token import GetAccessToken
-from util.Logger import Logger
+from util.Logger import logger as log
 from util.readTxt import OperationIni
 
-log = Logger("debug")
 
 def delivery_type(result, deliveryType):
     '''

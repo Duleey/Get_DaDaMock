@@ -6,55 +6,53 @@
 # @File    : Logger.py
 # @Software: PyCharm
 
+"""
+日志类。通过读取配置文件，定义日志级别、日志文件名、日志格式等。
+一般直接把logger import进去
+from utils.log import logger
+logger.info('test log')
+"""
 import os
-import sys
-import time
 import logging
-from util.singleton import Singleton
+from logging.handlers import TimedRotatingFileHandler
 
 
-@Singleton  # 如需打印不同路径的日志（运行日志、审计日志），则不能使用单例模式（注释或删除此行）。此外，还需设定参数name。
-# name=os.path.split(os.path.splitext(sys.argv[0])[0])[-1]
 class Logger:
-    def __init__(self, set_level="INFO",
-                 name=None,
-                 log_name=time.strftime("%Y-%m-%d.log", time.localtime()),
-                 log_path=os.path.join(os.path.dirname(os.path.dirname(__file__)),'log'),
-                 use_console=True):
+    def __init__(self, logger_name='framework'):
+        self.logger = logging.getLogger(logger_name)
+        logging.root.setLevel(logging.NOTSET)
+        self.log_path=os.path.join(os.path.dirname(os.path.dirname(__file__)),'log')
+        self.log_file_name = 'mock-service.log'  # 日志文件
+        self.backup_count = 30  # 保留的日志数量
+        # 日志输出级别
+        self.console_output_level = 'INFO'
+        self.file_output_level = 'INFO'
+        # 日志输出格式
+        pattern = '%(asctime)s - %(filename)s - %(levelname)s - %(message)s'
+        self.formatter = logging.Formatter(pattern)
+
+    def get_logger(self):
+        """在logger中添加日志句柄并返回，如果logger已有句柄，则直接返回
+        我们这里添加两个句柄，一个输出日志到控制台，另一个输出到日志文件。
+        两个句柄的日志级别不同，在配置文件中可设置。
         """
-        :param set_level: 日志级别["NOTSET"|"DEBUG"|"INFO"|"WARNING"|"ERROR"|"CRITICAL"]，默认为INFO
-        :param name: 日志中打印的name，默认为运行程序的name
-        :param log_name: 日志文件的名字，默认为当前时间（年-月-日.log）
-        :param log_path: 日志文件夹的路径，默认为logger.py同级目录中的log文件夹
-        :param use_console: 是否在控制台打印，默认为True
-        """
-        if not set_level:
-            set_level = self._exec_type()  # 设置set_level为None，自动获取当前运行模式
-        self.__logger = logging.getLogger(name)
-        self.setLevel(
-            getattr(logging, set_level.upper()) if hasattr(logging, set_level.upper()) else logging.INFO)  # 设置日志级别
-        if not os.path.exists(log_path):  # 创建日志目录
-            os.makedirs(log_path)
-        self.filename = name
-        formatter = logging.Formatter("%(asctime)s - %(filename)s - %(levelname)s - %(message)s")
-        handler_list = list()
-        handler_list.append(logging.FileHandler(os.path.join(log_path, log_name), encoding="utf-8"))
-        if use_console:
-            handler_list.append(logging.StreamHandler())
-        for handler in handler_list:
-            handler.setFormatter(formatter)
-            self.addHandler(handler)
+        if not self.logger.handlers:  # 避免重复日志
+            console_handler = logging.StreamHandler()
+            console_handler.setFormatter(self.formatter)
+            console_handler.setLevel(self.console_output_level)
+            self.logger.addHandler(console_handler)
 
-    def __getattr__(self, item):
-        return getattr(self.logger, item)
+            # 每天重新创建一个日志文件，最多保留backup_count份
+            file_handler = TimedRotatingFileHandler(filename=os.path.join(self.log_path, self.log_file_name),
+                                                    when='MIDNIGHT',
+                                                    interval=1,
+                                                    backupCount=self.backup_count,
+                                                    delay=True,
+                                                    encoding='utf-8'
+                                                    )
+            file_handler.setFormatter(self.formatter)
+            file_handler.setLevel(self.file_output_level)
+            self.logger.addHandler(file_handler)
+        return self.logger
 
-    @property
-    def logger(self):
-        return self.__logger
-
-    @logger.setter
-    def logger(self, func):
-        self.__logger = func
-
-    def _exec_type(self):
-        return "DEBUG" if os.environ.get("IPYTHONENABLE") else "INFO"
+logger = Logger().get_logger()

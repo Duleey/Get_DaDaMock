@@ -8,12 +8,12 @@
 
 import configparser
 from util import findPath
-from util.Logger import Logger
+from util.Logger import logger as log
 
 
 
 class OperationIni:
-    log = Logger("debug")
+    log = log
 
     def __init__(self, fileName='ip.ini', pathName='data'):
         self.file_name = findPath.data_dir(fileName, pathName=pathName)

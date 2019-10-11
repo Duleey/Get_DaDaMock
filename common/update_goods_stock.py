@@ -10,14 +10,14 @@ import requests
 from common.get_access_token import GetAccessToken
 from common.get_goods_detail import GetGoodsDetail
 from util.readTxt import OperationIni
-from util.Logger import Logger
+from util.Logger import logger as log
 
 '''
 修改商品库存
 '''
 class updateGoodsStock:
     def __init__(self, pid, env='QA'):
-        self.log = Logger("debug")
+        self.log = log
         opera = OperationIni(fileName='config.ini', pathName='config')
         self.get_skuId = GetGoodsDetail(env=env, pid=pid)
         self.get_access_token = GetAccessToken(env=env, pid=pid)

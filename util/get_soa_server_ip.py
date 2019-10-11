@@ -11,7 +11,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from util.readTxt import OperationIni
 from util import findPath
-from util.Logger import Logger
+from util.Logger import logger as log
 
 """
 爬取SOA后台对应服务的ip
@@ -19,7 +19,7 @@ from util.Logger import Logger
 class GetSoaServerIp:
 
     def __init__(self, env, serviceName):
-        self.log = Logger("debug")
+        self.log = log
 
         opera = OperationIni()
 
@@ -71,4 +71,4 @@ class GetSoaServerIp:
 
 
 # g = GetSoaServerIp(env='QA', serviceName='mock_order_throw_servicename')
-# g.get_mock_url()
+# g.get_soa_url()

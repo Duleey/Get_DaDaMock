@@ -10,14 +10,14 @@ import requests
 from common.get_access_token import GetAccessToken
 from util.get_delivery_type import get_delivery_type
 from util.readTxt import OperationIni
-from util.Logger import Logger
+from util.Logger import logger as log
 
 '''
 修改门店下商品的配送属性
 '''
 class updateStoreGoodsDeliveryType:
     def __init__(self, pid, env='QA'):
-        self.log = Logger("debug")
+        self.log = log
         opera = OperationIni(fileName='config.ini', pathName='config')
         self.get_access_token = GetAccessToken(env=env, pid=pid)
 

@@ -7,9 +7,8 @@
 # @Software: PyCharm
 
 import os
-from util.Logger import Logger
+from util.Logger import logger as log
 
-log = Logger("debug")
 
 def start_vpn():
     print('-------------------------------------------------------')

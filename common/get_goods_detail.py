@@ -9,14 +9,14 @@
 import requests
 from common.get_access_token import GetAccessToken
 from util.readTxt import OperationIni
-from util.Logger import Logger
+from util.Logger import logger as log
 
 '''
 获取商品详情
 '''
 class GetGoodsDetail:
     def __init__(self, pid, env='QA'):
-        self.log = Logger("debug")
+        self.log = log
         opera = OperationIni(fileName='config.ini', pathName='config')
         self.env = env
         self.get_access_token = GetAccessToken(pid=pid, env=env)
