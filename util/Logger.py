@@ -28,7 +28,7 @@ class Logger:
         self.console_output_level = 'INFO'
         self.file_output_level = 'INFO'
         # 日志输出格式
-        pattern = '%(asctime)s - %(filename)s - %(levelname)s - %(message)s'
+        pattern = '%(asctime)s - %(filename)s [Line:%(lineno)d] - %(levelname)s - %(message)s'
         self.formatter = logging.Formatter(pattern)
 
     def get_logger(self):
@@ -43,6 +43,9 @@ class Logger:
             self.logger.addHandler(console_handler)
 
             # 每天重新创建一个日志文件，最多保留backup_count份
+            # 每天生成的日志文件没有后缀，需要修改源码：TimedRotatingFileHandler类下的doRollover方法-->
+            # dfn = self.rotation_filename(self.baseFilename + "." + time.strftime(self.suffix, timeTuple)后面拼接后缀名
+            # dfn = self.rotation_filename(self.baseFilename + "." + time.strftime(self.suffix, timeTuple) + ".log")
             file_handler = TimedRotatingFileHandler(filename=os.path.join(self.log_path, self.log_file_name),
                                                     when='MIDNIGHT',
                                                     interval=1,
