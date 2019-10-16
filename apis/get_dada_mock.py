@@ -7,13 +7,14 @@
 # @Software: PyCharm
 
 import json
-from common.get_mock_url import *
+# from common.get_mock_url import *
 import requests
 from util.readTxt import *
 from flask import Flask, Response, request
 from util.get_vpn import start_vpn,stop_vpn
 from flask import Blueprint
 from util.Logger import logger as log
+from util.get_oms_server import getOmsServer
 
 app = Flask(__name__)
 getDaDaMock = Blueprint('getDaDaMock', __name__)
@@ -117,7 +118,9 @@ def get_dada_mock():
                 print('IP已失效，重新获取IP')
                 log.warning('IP已失效，重新获取IP')
                 print('-------------------------------------------------------')
-                url = GetMockUrl(env=env).get_mock_url()
+                # url = GetMockUrl(env=env).get_mock_url()
+                # 改用爬取oms后台
+                url = getOmsServer(serverName='mock_dada_servicename', env=env).get_server_ip()
                 print("获取的新IP为:{0}".format(url))
                 log.warning("获取的新IP为:{0}".format(url))
                 opera.write_ini(section=env, data=url)

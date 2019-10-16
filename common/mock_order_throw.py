@@ -10,9 +10,10 @@ import requests
 
 from common.get_order_detail import GetOrderDetail
 from util.Logger import logger as log
-from util.get_soa_server_ip import GetSoaServerIp
+# from util.get_soa_server_ip import GetSoaServerIp
 from util.get_vpn import start_vpn, stop_vpn
 from util.readTxt import OperationIni
+from util.get_oms_server import getOmsServer
 
 """
 模拟订单抛出
@@ -87,7 +88,9 @@ class MockOrderThrow:
             # print(status)
             if status == False or code != 200:
                 self.log.warning('IP已失效，重新获取IP')
-                url = GetSoaServerIp(env=self.env, serviceName='mock_order_throw_servicename').get_soa_url()
+                # url = GetSoaServerIp(env=self.env, serviceName='mock_order_throw_servicename').get_soa_url()
+                # 改用爬取oms后台
+                url = getOmsServer(serverName='mock_order_throw_servicename', env=self.env).get_server_ip()
                 self.log.warning("获取的新IP为:{0}".format(url))
                 self.opera.write_ini(section=self.env, data=url, key='mock_order_throw_ip')
                 mock_url = 'http://' + url + ':8080/service'
