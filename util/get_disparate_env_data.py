@@ -102,7 +102,7 @@ def translate_env_access_token(env, pid):
 
     return clientId, clientSecret
 
-def get_env_config(env, section, key):
+def get_env_config(section, key, env=None):
     '''
     获取config.ini文件中的配置数据
     :param env: 环境
@@ -110,11 +110,16 @@ def get_env_config(env, section, key):
     :param key: key
     :return: 对应配置数据
     '''
-    # 环境转小写
-    lower_env = env.lower()
-    config_data = opera.read_ini(section=section, key='{0}_{1}'.format(lower_env, key))
-    return config_data
+    if env == None:
+        config_data = opera.read_ini(section=section, key=key)
+        return config_data
+    else:
+        # 环境转小写
+        lower_env = env.lower()
+        config_data = opera.read_ini(section=section, key='{0}_{1}'.format(lower_env, key))
+        return config_data
 
-# print(get_env_config(env='qa', section='Oms', key='username'))
+# print(get_env_config(section='Oms', key='username'))
+# print(get_env_config(env='QA', section='access_token', key='url'))
 
 # print(translate_env_access_token(env='QA', pid=2), type(get_env_access_token(env='DEV', pid=2)))
