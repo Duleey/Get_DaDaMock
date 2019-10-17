@@ -41,13 +41,28 @@ def update_store_goods_delivery_type():
 
         # 字符串转大写
         env = env.upper()
-        # 初始化修改商品配送类型
-        update_stock = updateStoreGoodsDeliveryType(env=env, pid=pid)
-        # 调用修改商品配送类型
-        result = update_stock.update_store_goods_delivery_type(goodsIdList=goodsId, deliveryType=deliveryType, storeId=storeId)
+
+        result = None
+        try:
+            # 初始化修改商品配送类型
+            update_stock = updateStoreGoodsDeliveryType(env=env, pid=pid)
+            # 调用修改商品配送类型
+            result = update_stock.update_store_goods_delivery_type(goodsIdList=goodsId, deliveryType=deliveryType, storeId=storeId)
+            # print(result)
+            if result['code']['errcode'] == "0":
+                code = 200
+                msg = "请求成功"
+            else:
+                code = -100
+                msg = "请求失败"
+        except Exception:
+            code = -100
+            msg = "请求失败"
+            result = result
+
         res = {
-            "code": 1,
-            "msg": "请求成功",
+            "code": code,
+            "msg": msg,
             "请求场景": "修改商品配送类型",
             "data": result
         }

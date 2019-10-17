@@ -39,13 +39,28 @@ def update_goods_stock():
 
         # 字符串转大写
         env = env.upper()
-        # 初始化修改商品价格类
-        update_stock = updateGoodsStock(env=env, pid=pid)
-        # 调用修改商品价格方法
-        result = update_stock.update_goods_stock( goodsId=goodsId, editStockNum=editStockNum, storeId=storeId)
+
+        result = None
+        try:
+            # 初始化修改商品价格类
+            update_stock = updateGoodsStock(env=env, pid=pid)
+            # 调用修改商品价格方法
+            result = update_stock.update_goods_stock(goodsId=goodsId, editStockNum=editStockNum, storeId=storeId)
+            # print(result)
+            if result['code']['errcode'] == "0":
+                code = 200
+                msg = "请求成功"
+            else:
+                code = -100
+                msg = "请求失败"
+        except Exception:
+            code = -100
+            msg = "请求失败"
+            result = result
+
         res = {
-            "code": 1,
-            "msg": "请求成功",
+            "code": code,
+            "msg": msg,
             "请求场景": "修改商品库存",
             "data": result
         }

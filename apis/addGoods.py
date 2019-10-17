@@ -45,16 +45,30 @@ def add_goods():
 
         # 字符串转大写
         env = env.upper()
-        # 初始化新增商品类
-        add_goods = addGoods(env=env, pid=pid)
-        # 调用新增商品方法
-        result = add_goods.add_goods(storeId=storeId, outerGoodsCode=outerGoodsCode, outerSkuCode=outerSkuCode, deliveryTypeIdList=deliveryTypeIdList,
-                                     title=title, salePrice=salePrice, originalPrice=originalPrice, adviseSalePriceMin=adviseSalePriceMin,
-                                     adviseSalePriceMax=adviseSalePriceMax, goodsWeight=goodsWeight, goodsVolume=goodsVolume, goodsImageUrl=goodsImageUrl)
+
+        result = None
+        try:
+            # 初始化新增商品类
+            add_goods = addGoods(env=env, pid=pid)
+            # 调用新增商品方法
+            result = add_goods.add_goods(storeId=storeId, outerGoodsCode=outerGoodsCode, outerSkuCode=outerSkuCode,
+                                         deliveryTypeIdList=deliveryTypeIdList,
+                                         title=title, salePrice=salePrice, originalPrice=originalPrice,
+                                         adviseSalePriceMin=adviseSalePriceMin,
+                                         adviseSalePriceMax=adviseSalePriceMax, goodsWeight=goodsWeight,
+                                         goodsVolume=goodsVolume, goodsImageUrl=goodsImageUrl)
+            code = None
+            if result[0]['code']['errcode'] == "0":
+                code = 200
+            msg = "请求成功"
+        except Exception:
+            code = -100
+            msg = "请求失败"
+            result = result
 
         res = {
-            "code": 1,
-            "msg": "请求成功",
+            "code": code,
+            "msg": msg,
             "请求场景": "新增商品",
             "data": result
         }

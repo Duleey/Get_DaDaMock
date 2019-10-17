@@ -40,14 +40,28 @@ def update_goods_price():
 
         # 字符串转大写
         env = env.upper()
-        # 初始化修改商品价格类
-        update_price = updateGoodsPrice(env=env, pid=pid)
-        # 调用修改商品价格方法
-        result = update_price.update_goods_price(storeId=storeId, goodsId=goodsId, originalPrice=originalPrice, salePrice=salePrice)
-        # print(result)
+
+        result = None
+        try:
+            # 初始化修改商品价格类
+            update_price = updateGoodsPrice(env=env, pid=pid)
+            # 调用修改商品价格方法
+            result = update_price.update_goods_price(storeId=storeId, goodsId=goodsId, originalPrice=originalPrice, salePrice=salePrice)
+            # print(result)
+            if result['code']['errcode'] == "0":
+                code = 200
+                msg = "请求成功"
+            else:
+                code = -100
+                msg = "请求失败"
+        except Exception:
+            code = -100
+            msg = "请求失败"
+            result = result
+
         res = {
-            "code": 1,
-            "msg": "请求成功",
+            "code": code,
+            "msg": msg,
             "请求场景": "修改商品价格",
             "data": result
         }

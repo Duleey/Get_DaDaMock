@@ -37,13 +37,27 @@ def get_goods_detail():
 
         # 字符串转大写
         env = env.upper()
-        # 初始化修改商品价格类
-        get_goods_detail = GetGoodsDetail(env=env, pid=pid)
-        # 调用修改商品价格方法
-        result = get_goods_detail.get_goods_detail(goodsId=goodsId, storeId=storeId)
+
+        result = None
+        try:
+            # 初始化修改商品价格类
+            get_goods_detail = GetGoodsDetail(env=env, pid=pid)
+            # 调用修改商品价格方法
+            result = get_goods_detail.get_goods_detail(goodsId=goodsId, storeId=storeId)
+            if result[0]['code']['errcode'] == "0":
+                code = 200
+                msg = "请求成功"
+            else:
+                code = -100
+                msg = "请求失败"
+        except Exception:
+            code = -100
+            msg = "请求失败"
+            result = result
+
         res = {
-            "code": 1,
-            "msg": "请求成功",
+            "code": code,
+            "msg": msg,
             "请求场景": "查询商品详情",
             "data": result
         }

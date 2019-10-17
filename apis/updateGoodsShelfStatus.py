@@ -38,13 +38,28 @@ def update_goods_shelf_status():
 
         # 字符串转大写
         env = env.upper()
-        # 初始化修改商品价格类
-        update_shelf_status = updateGoodsShelfStatus(env=env, pid=pid)
-        # 调用修改商品价格方法
-        result = update_shelf_status.update_goods_shelf_status(goodsIdList=goodsIdList, isPutAway=isPutAway, storeId=storeId)
+
+        result = None
+        try:
+            # 初始化修改商品价格类
+            update_shelf_status = updateGoodsShelfStatus(env=env, pid=pid)
+            # 调用修改商品价格方法
+            result = update_shelf_status.update_goods_shelf_status(goodsIdList=goodsIdList, isPutAway=isPutAway, storeId=storeId)
+            # print(result)
+            if result['data']['result'] == True:
+                code = 200
+                msg = "请求成功"
+            else:
+                code = -100
+                msg = "请求失败"
+        except Exception:
+            code = -100
+            msg = "请求失败"
+            result = result
+
         res = {
-            "code": 1,
-            "msg": "请求成功",
+            "code": code,
+            "msg": msg,
             "请求场景": "修改商品上下架状态",
             "data": result
         }

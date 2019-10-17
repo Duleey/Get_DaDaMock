@@ -40,19 +40,33 @@ def mock_order_throw():
 
         # 字符串转大写
         env = env.upper()
-        # 初始化订单抛单类
-        mock_order_throw = MockOrderThrow(pid=pid, env=env)
-        # 调用订单抛单方法
+
         try:
+            # 初始化订单抛单类
+            mock_order_throw = MockOrderThrow(pid=pid, env=env)
+            # 调用订单抛单方法
             result = mock_order_throw.mock_order_throw(orderNo=orderNo, pickNum=pickNum)
-        except Exception as f:
-            result = {'error_msg':'请求错误，请检查参数！错误日志为：{0}'.format(f)}
+
+            czms = result[1]
+            data = result[0]
+            if result[0]['successForMornitor'] == True:
+                code = 200
+                msg = "请求成功"
+            else:
+                code = -100
+                msg = "请求失败"
+        except Exception:
+            czms = None
+            code = -100
+            msg = "请求失败"
+            data = {'error_msg': '请求错误，请检查参数！'}
+
         res = {
-            "code": 1,
-            "msg": "请求成功",
+            "code": code,
+            "msg": msg,
             "请求场景": "操作订单拣货",
-            "操作模式": result[1],
-            "data": result[0]
+            "操作模式": czms,
+            "data": data
         }
         return Response(json.dumps(res), mimetype='application/json')
     elif request.method == "GET":
