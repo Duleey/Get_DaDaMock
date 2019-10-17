@@ -94,23 +94,29 @@ class addGoods:
             outerSkuCode = d
 
         deliveryTypeId = None
-        if deliveryTypeIdList != None:
-            if deliveryTypeIdList == '3':
-                deliveryTypeId = get_delivery_type(env=self.env, pid=pid, storeId=storeId, deliveryType=int(deliveryTypeIdList))[1]
-                if deliveryTypeId == None:
-                    return {"status": 103, "message": "当前门店该配送方式不存在"}
-                elif len(deliveryTypeId) < 2:
-                    return {"status": 104, "message": "当前门店只有一种配送方式,请重新传递配送方式ID"}
+        try:
+            if deliveryTypeIdList != None:
+                if deliveryTypeIdList == '3':
+                    deliveryTypeId = \
+                    get_delivery_type(env=self.env, pid=pid, storeId=storeId, deliveryType=int(deliveryTypeIdList))[1]
+                    if deliveryTypeId == None:
+                        return {"status": 103, "message": "当前门店该配送方式不存在"}
+                    elif len(deliveryTypeId) < 2:
+                        return {"status": 104, "message": "当前门店只有一种配送方式,请重新传递配送方式ID"}
+                    else:
+                        deliveryTypeId = deliveryTypeId
                 else:
-                    deliveryTypeId = deliveryTypeId
-            else:
 
-                deliveryType = get_delivery_type(env=self.env, pid=self.pid, storeId=storeId, deliveryType=int(deliveryTypeIdList))[1]
-                if deliveryType == None:
-                    return {"status": 103, "message": "当前门店该配送方式不存在"}
-                else:
-                    deliveryTypeId=[]
-                    deliveryTypeId.append(deliveryType)
+                    deliveryType = get_delivery_type(env=self.env, pid=self.pid, storeId=storeId,
+                                                     deliveryType=int(deliveryTypeIdList))[1]
+                    if deliveryType == None:
+                        return {"status": 103, "message": "当前门店该配送方式不存在"}
+                    else:
+                        deliveryTypeId = []
+                        deliveryTypeId.append(deliveryType)
+        except Exception as f:
+            self.log.error('底层服务出错，请检查字段，错误日志为：{0}'.format(f))
+            return {'msg': '底层服务出错，请检查字段'}
 
         if deliveryTypeIdList == None:
             if self.env == "QA":
