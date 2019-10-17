@@ -102,7 +102,8 @@ def get_delivery_type(pid=None, env='QA', storeId=None, deliveryType=1, goodsId=
             return res.json(), deliveryTypeId
         except Exception as f:
             log.error('调用查询配送方式接口失败，错误日志为：{0}'.format(f))
-            return res.json()
+            # return res.json()
+            raise Exception("调用查询配送方式接口失败!")
 
     else:
         deliveryTypeId = delivery_type(result=r.json(), deliveryType=deliveryType)
