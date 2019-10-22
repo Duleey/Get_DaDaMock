@@ -110,5 +110,6 @@ def get_delivery_type(pid=None, env='QA', storeId=None, deliveryType=1, goodsId=
         log.info('结束：调用get_delivery_type方法，返回数据为:{0}，返回deliveryTypeId为：{1}'.format(r.json(), deliveryTypeId))
         return r.json(), deliveryTypeId
 
+
 # print(get_delivery_type(pid=1, env='QA',storeId=2001,deliveryType=1)[1])
 
