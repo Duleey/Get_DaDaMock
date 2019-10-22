@@ -31,6 +31,9 @@ def add_goods():
         adviseSalePriceMax = request.form.get('adviseSalePriceMax', None)
         goodsWeight = request.form.get('goodsWeight', None)
         goodsVolume = request.form.get('goodsVolume', None)
+        initialSales = request.form.get('initialSales', None)
+        categoryId = request.form.get('categoryId', None)
+        goodsBrandId = request.form.get('goodsBrandId', None)
         goodsImageUrl = request.form.get('goodsImageUrl', None)
 
 
@@ -56,7 +59,8 @@ def add_goods():
                                          title=title, salePrice=salePrice, originalPrice=originalPrice,
                                          adviseSalePriceMin=adviseSalePriceMin,
                                          adviseSalePriceMax=adviseSalePriceMax, goodsWeight=goodsWeight,
-                                         goodsVolume=goodsVolume, goodsImageUrl=goodsImageUrl)
+                                         goodsVolume=goodsVolume, initialSales=initialSales, categoryId=categoryId,
+                                         goodsBrandId=goodsBrandId, goodsImageUrl=goodsImageUrl)
             code = None
             if result[0]['code']['errcode'] == "0":
                 code = 200

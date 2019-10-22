@@ -42,7 +42,8 @@ class addGoods:
 
 
     def add_goods(self, storeId=None, outerGoodsCode=None, outerSkuCode=None, deliveryTypeIdList=None, title=None, salePrice=None, originalPrice=None,
-                  adviseSalePriceMin=None, adviseSalePriceMax=None, goodsWeight=None, goodsVolume=None, goodsImageUrl=None):
+                  adviseSalePriceMin=None, adviseSalePriceMax=None, goodsWeight=None, goodsVolume=None, initialSales=None, categoryId=None,
+                  goodsBrandId=goodsBrandId, goodsImageUrl=None):
         """
         新增商品
         :param storeId: 门店id
@@ -56,7 +57,10 @@ class addGoods:
         :param adviseSalePriceMax: 门店售价范围结束值
         :param goodsWeight: 商品重量(如果运费模板是按照重量计算，该字段必填，kg，两位小数)
         :param goodsVolume: 商品体积(如果运费模板是按照体积计算，该字段必填，m3，两位小数)
+        :param initialSales: 商品初始销售量
+        :param categoryId: 二级类目ID
         :param goodsImageUrl: 商品图片
+        :param goodsBrandId: 品牌ID
         :return:
         """
         url = self.url.format(self.path, self.access_token)
@@ -127,6 +131,15 @@ class addGoods:
             if self.env == "PROD":
                 deliveryTypeId = [209435]
 
+        # 商品初始销售量
+        if initialSales == None:
+            initialSales = 0
+
+        # 商品二级类目
+        if categoryId == None:
+            # 食品>零食/坚果/特产>其他休闲零食
+            categoryId = 274
+
         if salePrice == None:
             salePrice = 0.01
         # if originalPrice == None:
@@ -135,6 +148,10 @@ class addGoods:
             adviseSalePriceMin = 0.01
         if adviseSalePriceMax == None:
             adviseSalePriceMax = 1
+
+        if goodsBrandId == None:
+            goodsBrandId = ""
+
         if goodsImageUrl == None:
             goodsImageUrl = "https://image-c.weimobmxd.com/saas-wxbiz/a016cb2de441406289433fd0c71c56bd.png"
 
@@ -148,7 +165,7 @@ class addGoods:
             "deliveryTypeIdList": deliveryTypeId,
             "b2cGoodsType": 0
         },
-        "categoryId": 274,
+        "categoryId": categoryId,
         "title": title,
         "isMultiSku": 0,
         "outerGoodsCode": outerGoodsCode,
@@ -186,6 +203,7 @@ class addGoods:
         "goodsVideoUrl": None,
         "goodsVideoImageUrl": None,
         "limitBuyNum": 0,
+        "initialSales": initialSales,
         "isPutAway": 0,
         "saleChannelType": 3,
         "selectedGoodsPropList": [],
@@ -193,7 +211,7 @@ class addGoods:
         "goodsImageUrl": [
             goodsImageUrl
         ],
-        "goodsBrandId": ""
+        "goodsBrandId": goodsBrandId
     }
 }
 
