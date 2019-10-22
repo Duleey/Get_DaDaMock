@@ -43,7 +43,7 @@ class addGoods:
 
     def add_goods(self, storeId=None, outerGoodsCode=None, outerSkuCode=None, deliveryTypeIdList=None, title=None, salePrice=None, originalPrice=None,
                   adviseSalePriceMin=None, adviseSalePriceMax=None, goodsWeight=None, goodsVolume=None, initialSales=None, categoryId=None,
-                  goodsBrandId=goodsBrandId, goodsImageUrl=None):
+                  goodsBrandId=None, goodsImageUrl=None):
         """
         新增商品
         :param storeId: 门店id
