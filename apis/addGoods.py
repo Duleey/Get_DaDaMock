@@ -20,7 +20,8 @@ def add_goods():
     if request.method == "POST":
         env = request.form.get('env', None)
         pid = request.form.get('pid', None)
-        storeId = request.form.get('storeId', None)
+        # 逻辑层处理，不传storeId
+        # storeId = request.form.get('storeId', None)
         outerGoodsCode = request.form.get('outerGoodsCode', None)
         outerSkuCode = request.form.get('outerSkuCode', None)
         deliveryTypeIdList = request.form.get('deliveryTypeIdList', None)
@@ -54,7 +55,7 @@ def add_goods():
             # 初始化新增商品类
             add_goods = addGoods(env=env, pid=pid)
             # 调用新增商品方法
-            result = add_goods.add_goods(storeId=storeId, outerGoodsCode=outerGoodsCode, outerSkuCode=outerSkuCode,
+            result = add_goods.add_goods(outerGoodsCode=outerGoodsCode, outerSkuCode=outerSkuCode,
                                          deliveryTypeIdList=deliveryTypeIdList,
                                          title=title, salePrice=salePrice, originalPrice=originalPrice,
                                          adviseSalePriceMin=adviseSalePriceMin,

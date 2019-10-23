@@ -77,9 +77,11 @@ class addGoods:
         # print(pid)
 
         if storeId == None:
-            if self.env == "QA":
+            if self.env == "QA" and self.pid == 1:
                 storeId = 1001
-            if self.env == "DEV":
+            if self.env == "QA" and self.pid == 3:
+                storeId = 16003
+            if self.env == "DEV" and self.pid == 17:
                 storeId = 3017
             # TODO 预留prod环境
             if self.env == "PROD":
